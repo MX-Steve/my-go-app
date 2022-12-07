@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Title }}</title>
+    <link href="/public/css/login.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="login-box">
+        <div class="title">{{.Title}}</div>
+        <div class="input-box">
+            <div class="label">用户名: </div>
+            <div class="input-inner">
+                <input type="text" id="username" name="username" placeholder="请输入用户名" value="admin">
+            </div>
+        </div>
+        <div class="input-box">
+            <div class="label">密 码: </div>
+            <div class="input-inner">
+                <input type="password" id="password" name="password" placeholder="请输入密码" value="123456">
+            </div>
+        </div>
+        <div class="button-box">
+            <button id="submit">登 录</button>
+        </div>
+    </div>
+    <script src="/public/lib/jquery-3.1.1.min.js"></script>
+    <script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <script>
+        $("#submit").click(function () {
+            $.ajax({
+                type: "POST",
+                url: "/out/api/login",
+                dataType: "json",
+                data: JSON.stringify({ username: $("#username").val(), password: $("#password").val() }),
+                contentType: "application/json;charset=utf-8",
+                success: function (json) {
+                    if (json.ok == 1) {
+                        var Authorization = json.Authorization
+                        $.cookie('Authorization', Authorization)
+                        location.href = "/?tabId=0"
+                    } else {
+                        alert("用户名或密码错误")
+                    }
+                }
+            })
+        })
+    </script>
+</body>
+
+</html>

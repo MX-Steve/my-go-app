@@ -1,0 +1,55 @@
+{{ define "home" }}
+<div id="home">
+    <div class="person-img">
+        <div style="height: 1px;"></div>
+        <div class="img-father" style="margin-top: 5px;">
+            <img id="photo" style="display: none;" width="120px" src="/public/images/self/man.jpg" alt="个人照片">
+        </div>
+        <h3>Name: <span id="username"></span> </h3>
+        <h4>Phone: <span id="phone"></span> </h4>
+        <p>Email: <span id="email"></span> </p>
+    </div>
+    <div class="logout list">
+        <i class="el-icon-close"></i>
+        退出
+    </div>
+    <div class="collect list">
+        <i class="el-icon-collection"></i>
+        收藏
+    </div>
+    <div class="self-page list">
+        <i class="el-icon-s-home"></i>
+        个人主页
+    </div>
+    <div id="toSettings" class="settings list">
+        <i class="el-icon-setting"></i>
+        设置
+    </div>
+    <div class="space list"></div>
+    {{ template "settings" . }}
+</div>
+<script>
+    $.ajax({
+        url: "/in/api/userinfo",
+        type: "GET",
+        headers: {
+            "Authorization": $.cookie("Authorization")
+        },
+        success: function (json) {
+            $("#username").html(json.username)
+            $("#phone").html(json.phone)
+            $("#email").html(json.email)
+            $("#photo").attr("src", json.photo)
+            $("#photo").attr("style", "display: block;")
+        }
+    })
+    $(".logout").click(function(e){
+        $.cookie("Authorization", "")
+        location.href = "/login"
+    })
+    $("#toSettings").click(function(){
+        $("#settings").attr("style","z-index: 999")
+        $("#settings").fadeIn()
+    })
+</script>
+{{ end }}

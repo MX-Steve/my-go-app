@@ -1,0 +1,199 @@
+{{ define "editor" }}
+
+<head>
+    <link rel="stylesheet" href="/kindeditor/themes/qq/qq.css">
+    <link rel="stylesheet" href="/kindeditor/plugins/code/prettify.css">
+</head>
+<div>
+    <div class="el-row" style="margin-bottom: 15px;">
+        <div class="el-col el-col-12">
+
+            <input id="editor-title" type="text" autocomplete="off" placeholder="文章标题" value="" class="el-input__inner">
+        </div>
+        <div class="el-col el-col-6">
+            <div class="el-select editor-type">
+                <div class="el-input el-input--suffix">
+                    <input id="editor-type" type="text" readonly="readonly" autocomplete="off" placeholder="请选择类型"
+                        class="el-input__inner">
+                    <span class="el-input__suffix">
+                        <span class="el-input__suffix-inner">
+                            <i class="el-select__caret el-input__icon el-icon-arrow-up editor-select-arrow"></i>
+                        </span>
+                    </span>
+                </div>
+                <div class="el-select-dropdown el-popper editor-select-body"
+                    style="display:none; min-width: 240px; transform-origin: center top; z-index: 2006; position: absolute; top: 40px; left: 0px;"
+                    x-placement="bottom-start">
+                    <div class="el-scrollbar" style="">
+                        <div class="el-select-dropdown__wrap el-scrollbar__wrap"
+                            style="margin-bottom: -17px; margin-right: -17px;">
+                            <ul class="el-scrollbar__view el-select-dropdown__list">
+                                <!---->
+                                <li class="el-select-dropdown__item hover">backend</li>
+                                <li class="el-select-dropdown__item">frontend</li>
+                                <li class="el-select-dropdown__item">db</li>
+                                <li class="el-select-dropdown__item">structure</li>
+                                <li class="el-select-dropdown__item">security</li>
+                                <li class="el-select-dropdown__item">network</li>
+                                <li class="el-select-dropdown__item">python</li>
+                                <li class="el-select-dropdown__item">shell</li>
+                                <li class="el-select-dropdown__item">go</li>
+                                <li class="el-select-dropdown__item">other</li>
+                            </ul>
+                        </div>
+                        <div class="el-scrollbar__bar is-horizontal">
+                            <div class="el-scrollbar__thumb" style="transform: translateX(0%);"></div>
+                        </div>
+                        <div class="el-scrollbar__bar is-vertical">
+                            <div class="el-scrollbar__thumb" style="transform: translateY(0%);"></div>
+                        </div>
+                    </div>
+                    <div x-arrow="" class="popper__arrow" style="left: 35px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="el-col el-col-6" style="text-align: right;">
+            <span id="editor-tdid" style="color: transparent;font-size: 1px;line-height: 40px;"></span>
+        </div>
+    </div>
+    <div id="example" name="example">
+        <textarea id="t1" name="t1" cols="100" rows="8" style="width:99%;min-height:300px;visibility:hidden;">
+        </textarea>
+        <input type="hidden" id="t2" value="" />
+        <input type="button" class="el-button el-button--primary" value="提交" onclick="preSave()" />
+    </div>
+    <div id="success" role="alert" class="el-alert el-alert--success is-dark" style="display: none;">
+        <div class="el-alert__content">
+            <span class="el-alert__title" id="success-title">成功提示的文案</span>
+            <i class="el-alert__closebtn el-icon-close"></i>
+        </div>
+    </div>
+    <div id="error" role="alert" class="el-alert el-alert--error is-dark" style="display: none;">
+        <div class="el-alert__content">
+            <span id="error-title" class="el-alert__title">错误提示的文案</span>
+            <i class="el-alert__closebtn el-icon-close"></i>
+        </div>
+    </div>
+</div>
+<script src="/kindeditor/js/kindeditor-all.js"></script>
+<script src="/kindeditor/lang/zh-CN.js"></script>
+<script src="/kindeditor/plugins/code/prettify.js"></script>
+<script>
+    $(".editor-type input").click(function (e) {
+        if ($(".editor-select-arrow").hasClass("el-icon-arrow-up")) {
+            $(".editor-select-arrow").removeClass("el-icon-arrow-up")
+            $(".editor-select-arrow").addClass("el-icon-arrow-down")
+            $(".editor-select-body").fadeIn()
+        } else {
+            $(".editor-select-arrow").removeClass("el-icon-arrow-down")
+            $(".editor-select-arrow").addClass("el-icon-arrow-up")
+            $(".editor-select-body").fadeOut()
+        }
+    })
+    $(".editor-select-body li").click(function (e) {
+        $(".editor-select-body li").removeClass("hover")
+        $(e.target).addClass("hover")
+        var optionType = $(e.target).html()
+        $(".editor-type input").val(optionType)
+        $(".editor-select-arrow").removeClass("el-icon-arrow-down")
+        $(".editor-select-arrow").addClass("el-icon-arrow-up")
+        $(".editor-select-body").fadeOut()
+    })
+    var editor1;
+    KindEditor.ready(function (K) {
+        editor1 = K.create('#t1', {
+            items: ["source", "|", "undo", "redo", "|", "preview", "print", "template", "code", "cut", "copy", "paste", "plainpaste", "wordpaste", "|", "justifyleft", "justifycenter", "justifyright", "justifyfull", "insertorderedlist", "insertunorderedlist", "indent", "outdent", "subscript", "superscript", "clearhtml", "quickformat", "selectall", "|", "fullscreen", "/", "formatblock", "fontname", "fontsize", "|", "forecolor", "hilitecolor", "bold", "italic", "underline", "strikethrough", "lineheight", "removeformat", "|", "image", "multiimage", "flash", "media", "insertfile", "table", "hr", "emoticons", "baidumap", "pagebreak", "anchor", "link", "unlink", "|", "about"],
+            cssPath: '/kindeditor/plugins/code/prettify.css',
+            //                    uploadJson:'../asp.net/upload_json.ashx',
+            //                    fileManagerJson:'../asp.net/file_manager_json.ashx',
+            allowFileManager: true,
+            afterCreate: function () {
+                var self = this;
+            }
+        });
+        prettyPrint();
+        $("[title='HTML代码']").click()
+        var tdid = getUrlParams("tdid")
+        if (tdid) {
+            $.ajax({
+                url: "/in/api/tools/v1/articlebyid?id=" + tdid,
+                type: "GET",
+                async: false,
+                headers: {
+                    "Authorization": $.cookie("Authorization")
+                },
+                success: function (json) {
+                    editor1.html(json.content)
+                    $("#editor-title").val(json.title)
+                    $("#editor-type").val(json.type)
+                    $("#editor-tdid").html(json.id)
+                }
+            })
+        }
+    });
+    function preSave() {
+        var html = editor1.html();
+        var editorId = $("#editor-tdid").html()
+        var data = {
+            "title": $("#editor-title").val(),
+            "type": $("#editor-type").val(),
+            "content": html
+        }
+        if (editorId != 0) {
+            data["id"] = Number(editorId)
+            data["cud"] = "put"
+        } else {
+            data["cud"] = "post"
+        }
+        $.ajax({
+            url: "/in/api/tools/v1/article",
+            type: "POST",
+            dataType: "json",
+            headers: {
+                "Authorization": $.cookie("Authorization")
+            },
+            data: JSON.stringify(data),
+            contentType: "application/json;charset=utf-8",
+            success: function (json) {
+                if (json["msg"] == "更新数据成功") {
+                    $("#success").fadeIn()
+                    $("#success-title").html(json["msg"])
+                    setTimeout(function () {
+                        $("#success").fadeOut()
+                        location.href = "?tabId=1&menuId=4&tdid=" + editorId
+                    }, 1000)
+                } else if (json["msg"] == "新增数据成功") {
+                    $("#success").fadeIn()
+                    $("#success-title").html(json["msg"])
+                    setTimeout(function () {
+                        $("#success").fadeOut()
+                        location.href = "?tabId=1&menuId=4"
+                    }, 1000)
+                } else {
+                    $("#error").fadeIn()
+                    $("#error-title").html("更新或新增数据失败")
+                    setTimeout(function () {
+                        $("#error").fadeOut()
+                    }, 1000)
+                }
+            }
+        })
+    }
+    function getUrlParams(key) {
+        var url = window.location.search.substr(1);
+        if (url == '') {
+            return false;
+        }
+        var paramsArr = url.split('&');
+        for (var i = 0; i < paramsArr.length; i++) {
+            var combina = paramsArr[i].split("=");
+            if (combina[0] == key) {
+                return combina[1];
+            }
+        }
+        return false;
+    }
+
+
+</script>
+{{ end }}

@@ -1,0 +1,83 @@
+{{ define "email" }}
+<div class="el-row email-box">
+    <div class="el-col-12 email-left">
+        <div class="email-lists">
+            <textarea name="elists" id="elists" rows="13" placeholder="请输入邮件列表,一行一个"></textarea>
+        </div>
+        <div class="email-result">
+            <div class="result-msg" style="padding: 5px 10px;">
+                邮件发送结果展示
+            </div>
+        </div>
+    </div>
+    <div class="el-col-12 email-right">
+        <div class="email-name line-input">
+            <input type="text" id="ename" placeholder="请输入邮箱用户名" value="mx_steve@163.com">
+        </div>
+        <div class="email-password line-input">
+            <input type="password" id="epwd" placeholder="请输入邮箱登录密码" value="GDQFQYVUXMDVKBXS">
+        </div>
+        <div class="email-smtp line-input">
+            <input type="text" placeholder="SMTP服务器:端口" id="smtp" value="smtp.163.com:25">
+        </div>
+        <div class="email-title line-input">
+            <input type="text" placeholder="请输入邮件主题" id="etitle" value="">
+        </div>
+        <div class="email-body">
+            <textarea name="ebody" id="ebody" rows="8" placeholder="请输入邮件内容">
+
+
+以上，谢谢！
+
+祝身体健康，工作顺利，万事如意！
+
+---------------------------------------------------------
+
+
+李韩
+
+TEL: 18262629610
+
+EMAIL: mx_steve@163.com
+            </textarea>
+        </div>
+        <div class="email-button line-input" style="margin-top: 10px;text-align: center;">
+            <button id="sendEmail" class="el-button el-button--primary">发送邮件</button>
+        </div>
+    </div>
+</div>
+<script>
+    $("#sendEmail").click(function () {
+        var elists = $("#elists").val()
+        elists = elists.replace(/\n/g,";")
+        var data = {
+            "ebody": $("#ebody").val(),
+            "etitle": $("#etitle").val(),
+            "smtp": $("#smtp").val(),
+            "epwd": $("#epwd").val(),
+            "ename": $("#ename").val(),
+            "elists": elists
+        }
+        $.ajax({
+            type: "POST",
+            url: "/in/api/sendemail",
+            dataType: "json",
+            headers: {
+                "Authorization": $.cookie("Authorization")
+            },
+            data: JSON.stringify(data),
+            contentType: "application/json;charset=utf-8",
+            success: function (json) {
+                if (json["msg"] == "发送邮件成功") {
+                    var msg = "发送邮件成功"
+                    $(".result-msg").html("<span style='color: green;'>"+msg+"</span>")
+                } else {
+                    var msg = "发送邮件失败"
+                    $(".result-msg").html("<span style='color: red;'>"+msg+"</span>")
+                }
+            }
+        })
+    
+    })
+</script>
+{{ end }}

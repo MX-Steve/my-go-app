@@ -1,0 +1,72 @@
+{
+    "headers": {
+        "label01": {
+            "icon": "el-icon-message-solid",
+            "title": "人生忠告",
+            "h3": "人无完人",
+            "p": "人之大忌,好为人师"
+        },
+        "label02": {
+            "icon": "el-icon-position",
+            "title": "神的概念",
+            "h3": "合理定位",
+            "p": "观察未来,正确预判"
+        },
+        "label03": {
+            "icon": "el-icon-cold-drink",
+            "title": "个人追求",
+            "h3": "能力机遇",
+            "p": "适当时机,适当做事"
+        },
+        "label04": {
+            "icon": "el-icon-sunny",
+            "title": "对待他人",
+            "h3": "心平气和",
+            "p": "虽不害人,但需防人"
+        }
+    },
+    "carousel01": {
+        "c01": {
+            "title": "p1",
+            "img": "/public/images/banner01/p1.jpeg"
+        },
+        "c02": {
+            "title": "p2",
+            "img": "/public/images/banner01/p2.jpeg"
+        },
+        "c03": {
+            "title": "p3",
+            "img": "/public/images/banner01/p3.jpeg"
+        },
+        "c04": {
+            "title": "p4",
+            "img": "/public/images/banner01/p4.jpeg"
+        },
+        "c05": {
+            "title": "p5",
+            "img": "/public/images/banner01/p5.jpeg"
+        }
+    },
+    "carousel02": {
+        "c01": {
+            "title": "一定要保护好小猪猪",
+            "img": "/public/images/banner02/p1.jpg"
+        },
+        "c02": {
+            "title": "一定要照顾好小猪猪",
+            "img": "/public/images/banner02/p2.jpg"
+        },
+        "c03": {
+            "title": "小猪猪有优先选择权",
+            "img": "/public/images/banner02/p3.jpg"
+        },
+        "c04": {
+            "title": "不惹小猪猪生气",
+            "img": "/public/images/banner02/p4.jpg"
+        },
+        "c05": {
+            "title": "小猪猪么么哒",
+            "img": "/public/images/banner02/p5.jpg"
+        }
+    }
+}
