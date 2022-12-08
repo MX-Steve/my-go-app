@@ -1,10 +1,489 @@
 <!DOCTYPE html>
 <html>
 {{template "header" .}}
+
 <body>
-    <div class="web-icon">
-        <span>开拓者平台</span>
+    <div id="app">
+        <div style="text-align: center;margin: 10px;font-size: 24px;text-shadow: 2px 1px #9e7676;">开拓者平台</div>
+        <el-card style="min-height: 500px;">
+            <div v-if="activeIndex2 == 1">
+                {{template "ind" .}}
+            </div>
+            <div v-else-if="activeIndex2 == '2-1'">
+                {{template "plan" .}}
+            </div>
+            <div v-else-if="activeIndex2 == '2-2'">
+                {{template "articles" .}}
+            </div>
+            <div v-else-if="activeIndex2 == '2-3'">
+                {{template "editor" .}}
+            </div>
+            <div v-else-if="activeIndex2 == 3">
+                {{template "tasks" .}}
+            </div>
+            <div v-else-if="activeIndex2 == 4">
+                {{template "home" .}}
+            </div>
+            <div v-else-if="activeIndex2 == '4-1'">
+                {{template "settings" .}}
+            </div>
+            <div v-else>
+                默认页面
+            </div>
+        </el-card>
+        {{template "version" .}}
+        <el-menu :default-active="activeIndex2" class="el-menu-demo" mode="horizontal" @select="handleSelect"
+            background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
+            <el-menu-item index="1">首页</el-menu-item>
+            <el-submenu index="2">
+                <template slot="title">工作管理</template>
+                <el-menu-item index="2-1">计划列表</el-menu-item>
+                <el-menu-item index="2-2">文章列表</el-menu-item>
+                <el-menu-item index="2-3">新增文章</el-menu-item>
+                <el-submenu index="2-4">
+                    <template slot="title">选项4</template>
+                    <el-menu-item index="2-4-1">选项1</el-menu-item>
+                    <el-menu-item index="2-4-2">选项2</el-menu-item>
+                    <el-menu-item index="2-4-3">选项3</el-menu-item>
+                </el-submenu>
+            </el-submenu>
+            <el-menu-item index="3">个人管理</el-menu-item>
+            <el-menu-item index="4">
+                个人中心
+            </el-menu-item>
+        </el-menu>
     </div>
-    {{template "footer" .}}
 </body>
+<script>
+    function getUrlParams(key) {
+        var url = window.location.search.substr(1);
+        if (url == '') {
+            return false;
+        }
+        var paramsArr = url.split('&');
+        for (var i = 0; i < paramsArr.length; i++) {
+            var combina = paramsArr[i].split("=");
+            if (combina[0] == key) {
+                return combina[1];
+            }
+        }
+        return false;
+    }
+
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                activeIndex2: '1',
+                fileList: [],
+                userInfo: {
+                    email: "",
+                    phone: "",
+                    username: "",
+                    photo: ""
+                },
+                taskNo: 1,
+                taskSize: 10,
+                taskPages: 1,
+                taskTotalCount: 1,
+                taskList: [],
+                taskDialogVisible: false,
+                task: {
+                    name: "",
+                    description: "",
+                    every: 0,
+                    enabled: 0,
+                },
+                taskDialogTitle: "",
+                planNo: 1,
+                planSize: 10,
+                planPages: 1,
+                planTotalCount: 1,
+                planList: [],
+                planDialogVisible: false,
+                plan: {
+                    name: "",
+                    description: "",
+                    plan_status: 0,
+                },
+                planDialogTitle: "",
+                articlesNo: 1,
+                articlesSize: 10,
+                articlesPages: 1,
+                articlesTotalCount: 1,
+                articlesList: [],
+                articlesType: ["backend", "frontend", "db", "structure", "security", "network", "python", "shell", "go", "other"],
+                articleInline: {
+                    title: '',
+                    type: '',
+                    content: "",
+                },
+                articleType: "",
+                articleKey: "",
+                article: {},
+                editor1: undefined,
+                tdid: 0,
+            }
+        },
+        computed: {
+            headers() {
+                return {
+                    "Authorization": $.cookie("Authorization")
+                }
+            }
+        },
+        methods: {
+            // 主页方法
+            handleSelect(key, keyPath) {
+                this.activeIndex2 = key
+                if (this.activeIndex2 == 4) {
+                    this.getUserInfo()
+                } else if (this.activeIndex2 == 3) {
+                    this.getTasks()
+                } else if (this.activeIndex2 == '2-1') {
+                    this.getPlans()
+                } else if (this.activeIndex2 == '2-2') {
+                    this.getArticles()
+                } else if (this.activeIndex2 == '2-3') {
+                    this.kedit("t1")
+                }
+            },
+            // 用户中心方法
+            getUserInfo() {
+                var that = this;
+                $.ajax({
+                    url: "/in/api/userinfo",
+                    type: "GET",
+                    headers: that.headers,
+                    success: function (json) {
+                        that.userInfo.phone = json.phone
+                        that.userInfo.email = json.email
+                        that.userInfo.username = json.username
+                        that.userInfo.photo = json.photo
+                    }
+                })
+            },
+            logout() {
+                location.href = "/login"
+            },
+            goToSettings() {
+                this.activeIndex2 = "4-1"
+            },
+            // 用户设置页方法
+            handleRemove(file, fileList) {
+                console.log(file, fileList);
+            },
+            handlePreview(file) {
+                console.log(file);
+            },
+            handleExceed(files, fileList) {
+                this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+            },
+            beforeRemove(file, fileList) {
+                return this.$confirm(`确定移除 ${file.name}？`);
+            },
+            modifyUser() {
+                var that = this
+                $.ajax({
+                    type: "POST",
+                    url: '/in/api/usermod',
+                    contentType: 'application/json',
+                    data: JSON.stringify(that.userInfo),
+                    headers: that.headers,
+                    success: function (data) {
+                        that.$message.success("更新用户信息成功")
+                    },
+                    error: function (data) {
+                        that.$message.error("更新用户信息失败")
+                    }
+                })
+            },
+            // 任务方法集
+            getTasks() {
+                var that = this;
+                $.ajax({
+                    url: "/in/api/tools/v1/task?page_no=" + that.taskNo,
+                    type: "GET",
+                    headers: that.headers,
+                    success: function (json) {
+                        that.taskPages = json.pages;
+                        that.taskList = json.data;
+                        that.taskTotalCount = json.pages * that.taskSize;
+                    }
+                })
+            },
+            taskPageChange(val) {
+                this.taskNo = val;
+                this.getTasks()
+            },
+            delTask(id) {
+                var that = this;
+                var data = {
+                    cud: "delete",
+                    id: id,
+                }
+                $.ajax({
+                    type: "POST",
+                    url: '/in/api/tools/v1/task',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    headers: that.headers,
+                    success: function (data) {
+                        that.$message.success(data.msg)
+                        that.getTasks()
+                    },
+                    error: function (data) {
+                        that.$message.error(data.msg)
+                    }
+                })
+            },
+            openEditTaskDialog(row) {
+                this.taskDialogVisible = true
+                this.task = row
+                this.taskDialogTitle = "更新任务"
+                this.task["cud"] = "put"
+            },
+            openNewTaskDialog() {
+                this.task = {
+                    name: "",
+                    description: "",
+                    every: 0,
+                    enabled: 0,
+                }
+                this.task["cud"] = "post"
+                this.taskDialogTitle = "新增任务"
+                this.taskDialogVisible = true
+            },
+            taskFOp() {
+                var that = this;
+                that.taskDialogVisible = false
+                that.task = {
+                    name: "",
+                    description: "",
+                    every: 0,
+                    enabled: 0,
+                }
+            },
+            taskTOp() {
+                var that = this;
+                var data = this.task;
+                $.ajax({
+                    type: "POST",
+                    url: '/in/api/tools/v1/task',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    headers: that.headers,
+                    success: function (data) {
+                        that.$message.success(data.msg)
+                        that.taskDialogVisible = false
+                        if (that.task.cud == "post") {
+                            that.getTasks()
+                        }
+                    },
+                    error: function (data) {
+                        that.$message.error(data.msg)
+                        that.taskDialogVisible = false
+                    }
+                })
+            },
+            // 计划方法集
+            getPlans() {
+                var that = this;
+                $.ajax({
+                    url: "/in/api/tools/v1/plan?page_no=" + that.planNo,
+                    type: "GET",
+                    headers: that.headers,
+                    success: function (json) {
+                        that.planPages = json.pages;
+                        that.planList = json.data;
+                        that.planTotalCount = json.pages * that.planSize;
+                    }
+                })
+            },
+            planPageChange(val) {
+                this.planNo = val;
+                this.getPlans()
+            },
+            delPlan(id) {
+                var that = this;
+                var data = {
+                    cud: "delete",
+                    id: id,
+                }
+                $.ajax({
+                    type: "POST",
+                    url: '/in/api/tools/v1/plan',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    headers: that.headers,
+                    success: function (data) {
+                        that.$message.success(data.msg)
+                        that.getPlans()
+                    },
+                    error: function (data) {
+                        that.$message.error(data.msg)
+                    }
+                })
+            },
+            openEditPlanDialog(row) {
+                this.planDialogVisible = true
+                this.plan = row
+                this.planDialogTitle = "更新激活"
+                this.plan["cud"] = "put"
+            },
+            openNewPlanDialog() {
+                this.plan = {
+                    name: "",
+                    description: "",
+                    plan_status: 0,
+                }
+                this.plan["cud"] = "post"
+                this.planDialogTitle = "新增计划"
+                this.planDialogVisible = true
+            },
+            planFOp() {
+                var that = this;
+                that.planDialogVisible = false
+                that.plan = {
+                    name: "",
+                    description: "",
+                    plan_status: 0,
+                }
+            },
+            planTOp() {
+                var that = this;
+                var plan = this.plan;
+                $.ajax({
+                    type: "POST",
+                    url: '/in/api/tools/v1/plan',
+                    contentType: 'application/json',
+                    data: JSON.stringify(plan),
+                    headers: that.headers,
+                    success: function (data) {
+                        that.$message.success(data.msg)
+                        if (that.plan.cud == "post") {
+                            that.getPlans()
+                        }
+                        that.planDialogVisible = false
+                    },
+                    error: function (data) {
+                        that.$message.error(data.msg)
+                        that.planDialogVisible = false
+                    }
+                })
+            },
+            // 文章列表页功能集合
+            getArticles() {
+                var that = this;
+                $.ajax({
+                    url: "/in/api/tools/v1/article",
+                    type: "GET",
+                    data: {
+                        page_no: that.articlesNo,
+                        title: that.articleInline.key,
+                        type: that.articleInline.type,
+                    },
+                    headers: that.headers,
+                    success: function (json) {
+                        that.articlesPages = json.pages;
+                        that.articlesList = json.data;
+                        that.articlesTotalCount = json.pages * that.articlesSize;
+                    }
+                })
+            },
+            articlesPageChange(val) {
+                this.articlesNo = val;
+                this.getArticles()
+            },
+            NewArticles() {
+                console.log("new articles")
+            },
+            delArticles(id) {
+                var that = this;
+                var data = {
+                    cud: "delete",
+                    id: id,
+                }
+                $.ajax({
+                    type: "POST",
+                    url: '/in/api/tools/v1/article',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    headers: that.headers,
+                    success: function (data) {
+                        that.$message.success(data.msg)
+                        that.getArticles()
+                    },
+                    error: function (data) {
+                        that.$message.error(data.msg)
+                    }
+                })
+            },
+            articleSearch() {
+                this.getArticles()
+            },
+            kedit(keid) {
+                var that = this
+                setTimeout(function () {
+                    that.editor1 = KindEditor.create('#' + keid, {
+                        items: ["source", "|", "undo", "redo", "|", "preview", "print", "template", "code", "cut", "copy", "paste", "plainpaste", "wordpaste", "|", "justifyleft", "justifycenter", "justifyright", "justifyfull", "insertorderedlist", "insertunorderedlist", "indent", "outdent", "subscript", "superscript", "clearhtml", "quickformat", "selectall", "|", "fullscreen", "/", "formatblock", "fontname", "fontsize", "|", "forecolor", "hilitecolor", "bold", "italic", "underline", "strikethrough", "lineheight", "removeformat", "|", "image", "multiimage", "flash", "media", "insertfile", "table", "hr", "emoticons", "baidumap", "pagebreak", "anchor", "link", "unlink", "|", "about"],
+                        cssPath: '/kindeditor/plugins/code/prettify.css',
+                        allowFileManager: true,
+                        afterCreate: function () {
+                            var self = this;
+                        }
+                    });
+                }, 500)
+            },
+            preSave() {
+                var html = this.editor1.html();
+                this.article.content = html;
+                if (this.tdid != 0) {
+                    this.article["cud"] = "put"
+                } else {
+                    this.article["cud"] = "post"
+                }
+                var that = this
+                $.ajax({
+                    url: "/in/api/tools/v1/article",
+                    type: "POST",
+                    dataType: "json",
+                    headers: this.headers,
+                    data: JSON.stringify(this.article),
+                    success: function (data) {
+                        that.$message.success(data.msg)
+                    },
+                    error: function (data) {
+                        that.$message.error(data.msg)
+                    }
+                })
+            },
+            editArticles(id){
+                this.tdid = id;
+                var that = this;
+                $.ajax({
+                    url: "/in/api/tools/v1/articlebyid",
+                    type: "GET",
+                    data: {
+                        id: that.tdid
+                    },
+                    headers: that.headers,
+                    success: function (json) {
+                        console.log(json)
+                        that.activeIndex2 = "2-3"
+                        that.kedit("t1")
+                        that.article.title=json.title
+                        that.article.type=json.type
+                        that.article.content=json.content
+                    }
+                })
+            }
+
+        },
+        mounted() {
+
+        }
+    });
+</script>
+
 </html>

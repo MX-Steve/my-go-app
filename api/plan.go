@@ -60,7 +60,7 @@ type PlanReq struct {
 	Id          int    `json:"id"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
-	PlanDate    int    `json:"plan_date"`
+	PlanDate    string `json:"plan_date"`
 	PlanStatus  int    `json:"plan_status"`
 	DelTag      int    `json:"del_tag"`
 }

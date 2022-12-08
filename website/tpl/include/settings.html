@@ -1,132 +1,28 @@
 {{ define "settings" }}
-<div id="settings">
-    <div class="list el-row">
-        <div class="el-col el-col-6">
-            <i class="el-icon-s-custom"></i>
-            上传头像:
-        </div>
-        <div class="el-col el-col-18">
-            <input class="photo" name="image" type="file">
-        </div>
-    </div>
-    <div class="list" style="text-align: center;">
-        <input type="button" id="modifyPhoto" class="el-button el-button--primary" value="更新头像" />
-    </div>
-
-    <div class="list el-row">
-        <div class="el-col el-col-6">
-            <i class="el-icon-phone"></i>
-            修改电话:
-        </div>
-        <div class="el-col el-col-18">
-            <input class="phone" type="text" placeholder="请输入要修改的电话">
-        </div>
-    </div>
-    <div class="list el-row">
-        <div class="el-col el-col-6">
-            <i class="el-icon-receiving"></i>
-            修改邮箱:
-        </div>
-        <div class="el-col el-col-18">
-            <input class="email" type="text" placeholder="请输入要修改的邮箱">
-        </div>
-    </div>
-    <div class="list" style="text-align: center;">
-        <button id="modifyUser" type="button" class="el-button el-button--primary" size="mini">
-            更新
-        </button>
-        <button id="returnHome" type="button" class="el-button el-button--default" size="mini">
-            返回
-        </button>
-    </div>
-    <div role="alert" class="el-alert el-alert--success is-dark settings-success" style="display: none;">
-        <div class="el-alert__content">
-            <span class="el-alert__title">成功提示的文案</span>
-            <i class="el-alert__closebtn el-icon-close"></i>
-        </div>
-    </div>
-    <div role="alert" class="el-alert el-alert--error is-dark settings-error" style="display: none;">
-        <div class="el-alert__content">
-            <span class="el-alert__title">错误提示的文案</span>
-            <i class="el-alert__closebtn el-icon-close"></i>
-        </div>
-    </div>
+<div>
+    <el-row>
+        <el-col :span="4">上传头像: </el-col>
+        <el-col :span="8" style="border-right: 1px solid #ddd;min-height: 200px;">
+            <el-upload class="upload-demo" action="/in/api/usermodphoto" :on-preview="handlePreview"
+                :on-remove="handleRemove" :before-remove="beforeRemove" multiple :limit="1" :on-exceed="handleExceed"
+                name="image" :headers="headers" :file-list="fileList">
+                <el-button size="small" type="primary">上传</el-button>
+                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+            </el-upload>
+        </el-col>
+        <el-col :span="12">
+            <el-form ref="userInfo" :model="userInfo" label-width="80px">
+                <el-form-item label="用户电话">
+                    <el-input v-model="userInfo.phone"></el-input>
+                </el-form-item>
+                <el-form-item label="用户邮箱">
+                    <el-input v-model="userInfo.email"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="modifyUser">修改</el-button>
+                </el-form-item>
+            </el-form>
+        </el-col>
+    </el-row>
 </div>
-<script>
-    $("#modifyUser").click(function () {
-        var phone = $(".phone").val()
-        var email = $(".email").val()
-        $.ajax({
-            type: "POST",
-            url: '/in/api/usermod',
-            contentType: 'application/json',
-            data: JSON.stringify({
-                "phone": phone,
-                "email": email
-            }),
-            headers: {
-                "Authorization": $.cookie("Authorization")
-            },
-            success: function (data) {
-                var Msg = "更新用户信息成功"
-                $(".settings-success span").html(Msg)
-                $(".settings-success").fadeIn()
-                setTimeout(function () {
-                    location.reload(0)
-                }, 1000)
-            },
-            error: function (data) {
-                var Msg = "更新用户信息失败"
-                $(".settings-error span").html(Msg)
-                $(".settings-error").fadeIn()
-            }
-        })
-    })
-    $("#modifyPhoto").click(function () {
-        var file = $(".photo").prop("files")
-        if (file[0] != undefined) {
-            var fileName = file[0]["name"]
-            $("#fileName").html(fileName)
-            if (fileName.indexOf(".jpg") == -1 && fileName.indexOf(".png") == -1) {
-                var errMsg = "上传图片只能是 jpg 或 png 格式"
-                $(".settings-error span").html(errMsg)
-                $(".settings-error").fadeIn()
-            } else {
-                var formData = new FormData();
-                formData.append("image", $(".photo")[0].files[0]);
-                $.ajax({
-                    url: '/in/api/usermodphoto',
-                    data: formData,
-                    type: "post",
-                    dataType: 'json',
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    headers: {
-                        "Authorization": $.cookie("Authorization")
-                    },
-                    success: function (data) {
-                        var Msg = "更新头像成功"
-                        $(".settings-success span").html(Msg)
-                        $(".settings-success").fadeIn()
-                        setTimeout(function () {
-                            location.reload(0)
-                        }, 1000)
-                    },
-                })
-            }
-        } else {
-            var errMsg = "没有选择有上传的文件"
-            $(".settings-error span").html(errMsg)
-            $(".settings-error").fadeIn()
-        }
-
-    })
-    $(".el-icon-close").click(function () {
-        $(this).parent().parent().fadeOut()
-    })
-    $("#returnHome").click(function () {
-        $("#settings").fadeOut()
-    })
-</script>
 {{ end }}

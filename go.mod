@@ -3,6 +3,7 @@ module MX-Steve/my-go-app
 go 1.18
 
 require (
+	github.com/MX-Steve/my-go-app v0.0.0-00010101000000-000000000000
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-sql-driver/mysql v1.7.0
 	github.com/golang-jwt/jwt/v4 v4.3.0
@@ -43,3 +44,5 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
+
+replace github.com/MX-Steve/my-go-app => ../my-go-app

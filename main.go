@@ -88,6 +88,7 @@ func main() {
 	if ok == "test" {
 		test()
 	} else if ok == "run" {
+		go test()
 		run()
 	} else {
 		getWebSite()

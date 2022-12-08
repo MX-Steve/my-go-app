@@ -73,7 +73,11 @@ func ModPhoto(c *gin.Context) {
 	c.Next()
 	us := model.User{}
 	tools.AddAudit(c, "更新头像", "进行更新头像")
-	file, _ := c.FormFile("image")
+	file, e := c.FormFile("image")
+	if e != nil {
+		log.Println(e)
+		return
+	}
 	dir := "./website/static/images/self/"
 	dst_file := fmt.Sprintf("%s%s", dir, file.Filename)
 	err := c.SaveUploadedFile(file, dst_file)

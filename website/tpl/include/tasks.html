@@ -1,479 +1,58 @@
 {{ define "tasks" }}
 <div class="main">
-    <div id="task-table" class="el-table el-table--fit el-table--enable-row-hover el-table--enable-row-transition"
-        style="width: 100%;">
-        <div class="el-table__header-wrapper">
-            <table cellspacing="0" cellpadding="0" border="0" class="el-table__header">
-                <colgroup>
-                    <col name="el-table_1_column_1" width="80">
-                    <col name="el-table_1_column_2" width="200">
-                    <col name="el-table_1_column_3" width="273">
-                    <col name="el-table_1_column_4" width="80">
-                    <col name="el-table_1_column_5" width="80">
-                    <col name="el-table_1_column_6" width="80">
-                    <col name="el-table_1_column_7" width="320">
-                    <col name="el-table_1_column_8" width="180">
-                    <col name="el-table_1_column_9" width="200">
-                    <col name="gutter" width="0">
-                </colgroup>
-                <thead class="has-gutter">
-                    <tr class="">
-                        <th colspan="1" rowspan="1" class="el-table_1_column_1     is-leaf el-table__cell">
-                            <div class="cell">ID</div>
-                        </th>
-                        <th colspan="1" rowspan="1" class="el-table_1_column_2     is-leaf el-table__cell">
-                            <div class="cell">名称</div>
-                        </th>
-                        <th colspan="1" rowspan="1" class="el-table_1_column_3     is-leaf el-table__cell">
-                            <div class="cell">描述</div>
-                        </th>
-                        <th colspan="1" rowspan="1" class="el-table_1_column_4     is-leaf el-table__cell">
-                            <div class="cell">启用</div>
-                        </th>
-                        <th colspan="1" rowspan="1" class="el-table_1_column_5     is-leaf el-table__cell">
-                            <div class="cell">周期</div>
-                        </th>
-                        <th colspan="1" rowspan="1" class="el-table_1_column_6     is-leaf el-table__cell">
-                            <div class="cell">是否删除</div>
-                        </th>
-                        <th colspan="1" rowspan="1" class="el-table_1_column_7     is-leaf el-table__cell">
-                            <div class="cell">更新时间</div>
-                        </th>
-                        <th colspan="1" rowspan="1" class="el-table_1_column_8     is-leaf el-table__cell">
-                            <div class="cell">创建者</div>
-                        </th>
-                        <th colspan="1" rowspan="1" class="el-table_1_column_9     is-leaf el-table__cell">
-                            <div class="cell">操作</div>
-                        </th>
-                        <th class="el-table__cell gutter" style="width: 0px; display: none;"></th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-        <div class="el-table__body-wrapper is-scrolling-none">
-            <table cellspacing="0" cellpadding="0" border="0" class="el-table__body">
-                <colgroup>
-                    <col name="el-table_1_column_1" width="80">
-                    <col name="el-table_1_column_2" width="200">
-                    <col name="el-table_1_column_3" width="273">
-                    <col name="el-table_1_column_4" width="80">
-                    <col name="el-table_1_column_5" width="80">
-                    <col name="el-table_1_column_6" width="80">
-                    <col name="el-table_1_column_7" width="320">
-                    <col name="el-table_1_column_8" width="180">
-                    <col name="el-table_1_column_9" width="200">
-                </colgroup>
-                <tbody id="tasks-body">
-                </tbody>
-            </table>
-            <button type="button" class="el-button el-button--primary is-circle" size="mini" onclick="addTask()">
-                <i class="el-icon-circle-plus"></i>
-            </button>
-        </div>
-        <div class="el-table__column-resize-proxy" style="display: none;"></div>
-    </div>
-    <div id="task-pagination" style="margin-top: 10px;" class="el-pagination is-background">
-        <button type="button" disabled="disabled" class="btn-prev el-icon el-icon-arrow-left"></button>
-        <ul class="el-pager"></ul>
-        <button type="button" class="btn-next el-icon el-icon-arrow-right"></button>
-    </div>
-    <div id="task-add" style="display: none;">
-        <div tabindex="-1" role="dialog" aria-modal="true" aria-label="添加任务" class="el-message-box__wrapper"
-            style="z-index: 2001;">
-            <div class="el-message-box">
-                <div class="el-message-box__header">
-                    <div class="el-message-box__title">
-                        <span>添加任务</span>
-                    </div>
-                    <button type="button" aria-label="Close" class="el-message-box__headerbtn" onclick="closeMsg2()">
-                        <i class="el-message-box__close el-icon-close"></i>
-                    </button>
-                </div>
-                <div class="el-message-box__content">
-                    <div class="el-message-box__container">
-                        <div class="el-message-box__message">
-                            <form class="el-form">
-                                <div class="el-form-item">
-                                    <label class="el-form-item__label" style="width: 80px;">任务名称</label>
-                                    <div class="el-form-item__content" style="margin-left: 80px;">
-                                        <div class="el-input">
-                                            <input id="input-name-add" type="text" autocomplete="off"
-                                                class="el-input__inner">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="el-form-item">
-                                    <label class="el-form-item__label" style="width: 80px;">任务描述</label>
-                                    <div class="el-form-item__content" style="margin-left: 80px;">
-                                        <div class="el-input">
-                                            <input id="input-description-add" type="text" autocomplete="off"
-                                                class="el-input__inner">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="el-form-item">
-                                    <label class="el-form-item__label" style="width: 80px;">是否启用</label>
-                                    <div class="el-form-item__content" style="margin-left: 80px;">
-                                        <div id="onOff-add" role="switch" class="el-switch" onclick="onOffSW()">
-                                            <input type="checkbox" name="" true-value="true" class="el-switch__input">
-                                            <span class="el-switch__core" style="width: 40px;"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="el-form-item">
-                                    <label class="el-form-item__label" style="width: 80px;">任务周期</label>
-                                    <div class="el-form-item__content" style="margin-left: 80px;">
-                                        <div class="el-input">
-                                            <input id="input-every-add" type="number" autocomplete="off"
-                                                class="el-input__inner" placeholder="请输入执行周期间隔秒数">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="el-form-item">
-                                    <div class="el-form-item__content" style="margin-left: 80px;">
-                                        <button onclick="modFun('add')" type="button"
-                                            class="el-button el-button--primary">
-                                            <span>添加</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="v-modal" tabindex="0" style="z-index: 2000;"></div>
-    </div>
-    <div id="task-edit" style="display: none;">
-        <div tabindex="-1" role="dialog" aria-modal="true" aria-label="更新任务" class="el-message-box__wrapper"
-            style="z-index: 2001;">
-            <div class="el-message-box">
-                <div class="el-message-box__header">
-                    <div class="el-message-box__title">
-                        <span>更新任务</span>
-                    </div>
-                    <button type="button" aria-label="Close" class="el-message-box__headerbtn" onclick="closeMsg()">
-                        <i class="el-message-box__close el-icon-close"></i>
-                    </button>
-                </div>
-                <div class="el-message-box__content">
-                    <div class="el-message-box__container">
-                        <div class="el-message-box__message">
-                            <form class="el-form">
-                                <div class="el-form-item">
-                                    <label class="el-form-item__label" style="width: 80px;">任务名称</label>
-                                    <div class="el-form-item__content" style="margin-left: 80px;">
-                                        <div class="el-input">
-                                            <input id="input-name" type="text" autocomplete="off"
-                                                class="el-input__inner" value="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="el-form-item">
-                                    <label class="el-form-item__label" style="width: 80px;">任务描述</label>
-                                    <div class="el-form-item__content" style="margin-left: 80px;">
-                                        <div class="el-input">
-                                            <input id="input-description" type="text" autocomplete="off"
-                                                class="el-input__inner" value="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="el-form-item">
-                                    <label class="el-form-item__label" style="width: 80px;">是否启用</label>
-                                    <div class="el-form-item__content" style="margin-left: 80px;">
-                                        <div id="onOff" role="switch" class="el-switch" onclick="onOff()">
-                                            <input type="checkbox" name="" true-value="true" class="el-switch__input">
-                                            <span class="el-switch__core" style="width: 40px;"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="el-form-item">
-                                    <label class="el-form-item__label" style="width: 80px;">任务周期</label>
-                                    <div class="el-form-item__content" style="margin-left: 80px;">
-                                        <div class="el-input">
-                                            <input id="input-every" type="number" autocomplete="off"
-                                                class="el-input__inner" placeholder="请输入执行周期间隔秒数" value="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="el-form-item">
-                                    <div class="el-form-item__content" style="margin-left: 80px;">
-                                        <button onclick="modFun('mod')" type="button"
-                                            class="el-button el-button--primary">
-                                            <span>更新</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="v-modal" tabindex="0" style="z-index: 2000;"></div>
-    </div>
-    <div id="success" role="alert" class="el-alert el-alert--success is-dark" style="display: none;">
-        <div class="el-alert__content">
-            <span class="el-alert__title" id="success-title">成功提示的文案</span>
-            <i class="el-alert__closebtn el-icon-close"></i>
-        </div>
-    </div>
-    <div id="error" role="alert" class="el-alert el-alert--error is-dark" style="display: none;">
-        <div class="el-alert__content">
-            <span id="error-title" class="el-alert__title">错误提示的文案</span>
-            <i class="el-alert__closebtn el-icon-close"></i>
-        </div>
-    </div>
+    <el-button type="text" class="el-icon-circle-plus" @click="openNewTaskDialog"></el-button>
+    <el-table :data="taskList" style="width: 100%">
+        <el-table-column prop="id" label="ID" width="60">
+        </el-table-column>
+        <el-table-column prop="name" label="名称" width="100">
+        </el-table-column>
+        <el-table-column prop="description" label="描述" width="150">
+        </el-table-column>
+        <el-table-column prop="every" label="周期" width="80">
+        </el-table-column>
+        <el-table-column label="是否启用" width="60">
+            <template slot-scope="scope">
+                <i v-if="scope.row.enabled == 1" class="el-icon-star-on" style="color: green;"></i>
+                <i v-else class="el-icon-star-off"></i>
+            </template>
+        </el-table-column>
+        <el-table-column prop="update_time" label="更新时间" width="100">
+        </el-table-column>
+        <el-table-column prop="creater" label="创建者" width="80">
+        </el-table-column>
+        <el-table-column label="操作" width="120">
+            <template slot-scope="scope">
+                <el-button type="text" size="mini" class="el-icon-edit" @click="openEditTaskDialog(scope.row)"></el-button>
+                <el-button type="text" size="mini" class="el-icon-delete" @click="delTask(scope.row.id)"></el-button>
+            </template>
+        </el-table-column>
+    </el-table>
+    <el-pagination :currentPage="taskNo" :hide-on-single-page="true" background layout="prev, pager, next"
+        @current-change="taskPageChange" :total="taskTotalCount">
+    </el-pagination>
+    <el-dialog :title="taskDialogTitle" :visible.sync="taskDialogVisible" width="60%" :before-close="taskFOp">
+        <el-form ref="task" :model="task" label-width="80px">
+            <el-form-item label="任务名称">
+                <el-input v-model="task.name"></el-input>
+            </el-form-item>
+            <el-form-item label="任务描述">
+                <el-input v-model="task.description"></el-input>
+            </el-form-item>
+            <el-form-item label="是否启用">
+                <el-switch  
+                    v-model="task.enabled"
+                    :inactive-value="0"
+                    :active-value="1"
+                    ></el-switch>
+            </el-form-item>
+            <el-form-item label="任务周期">
+                <el-input-number v-model="task.every" :min="1" :max="10000" label="任务周期"></el-input-number>
+            </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="taskFOp">取 消</el-button>
+            <el-button type="primary" @click="taskTOp">确 定</el-button>
+        </span>
+    </el-dialog>
 </div>
-<script src="/public/js/page.js"></script>
-<script>
-     var taskPages = 1
-    function getTaskData(page_no) {
-        $.ajax({
-            url: "/in/api/tools/v1/task?page_no=" + page_no,
-            type: "GET",
-            headers: {
-                "Authorization": $.cookie("Authorization")
-            },
-            async: false,
-            success: function (json) {
-                taskPages = json.pages
-                var json = json.data
-                var str = ""
-            for (var i = 0; i < json.length; i++) {
-                var item = json[i]
-                str += "<tr class='el-table__row'><td rowspan='1' colspan='1' class='el-table_1_column_1   el-table__cell'><div class='cell'>"
-                str += item.id
-                str += "</div></td><td rowspan='1' colspan='1' class='el-table_1_column_2   el-table__cell'><div class='cell'>"
-                str += item.name
-                str += "</div></td><td rowspan='1' colspan='1' class='el-table_1_column_3   el-table__cell'><div class='cell'>"
-                str += item.description
-                str += "</div></td><td rowspan='1' colspan='1' class='el-table_1_column_4   el-table__cell'><div class='cell'>"
-                if (item.enabled == 1) {
-                    str += "<i class='el-icon-star-on' style='color: green;'></i>"
-                } else {
-                    str += "<i class='el-icon-star-off' style='color: gray;'></i>"
-                }
-                str += "</div></td><td rowspan='1' colspan='1' class='el-table_1_column_5   el-table__cell'><div class='cell'>"
-                str += item.every
-                str += "</div></td><td rowspan='1' colspan='1' class='el-table_1_column_6   el-table__cell'><div class='cell'>"
-                if (item.del_tag == 0) {
-                    str += "<i class='el-icon-check' style='color: green;'></i>"
-                } else {
-                    str += "<i class='el-icon-close' style='color: red;'></i>"
-                }
-                str += "</div></td><td rowspan='1' colspan='1' class='el-table_1_column_7   el-table__cell'><div class='cell'>"
-                str += item.update_time
-                str += "</div></td><td rowspan='1' colspan='1' class='el-table_1_column_8   el-table__cell'><div class='cell'>"
-                str += item.creater
-                str += "</div></td><td rowspan='1' colspan='1' class='el-table_1_column_8   el-table__cell'><div class='cell'>"
-                str += "<button type='button' tdid='" + item.id + "' class='modify-task el-button el-button--primary is-circle el-icon-edit' size='mini'></button>"
-                str += "<button tdid='" + item.id + "' type='button' class='del-task el-button el-button--danger is-circle el-icon-delete' size='mini'>"
-                str += "</button></div></td></tr>"
-            }
-                $("#tasks-body").html(str)
-            }
-        })
-    }
-    var taskPid = "#task-pagination"
-    getTaskData(1)
-    setPage(taskPid, taskPages, 1, "+")
-    $(".el-pager").click(function (e) {
-        $(".el-pager>li").removeClass("active")
-        $(e.target).addClass("active")
-        var page_no = $(e.target).html()
-        getTaskData(page_no)
-        if (page_no != 1) {
-            $(taskPid + ">.btn-prev").attr("disabled", false)
-        } else {
-            $(taskPid + ">.btn-prev").attr("disabled", true)
-        }
-        if (page_no == taskPages) {
-            $(taskPid + ">.btn-next").attr("disabled", true)
-        } else {
-            $(taskPid + ">.btn-next").attr("disabled", false)
-        }
-    })
-    $(taskPid + ">.btn-prev").click(function (e) {
-        var page_no = $(taskPid + ">.el-pager>.active").html()
-        var next_page = page_no - 1
-        setPage(taskPid, taskPages, next_page, "-")
-        getTaskData(next_page)
-    })
-    $(taskPid + ">.btn-next").click(function (e) {
-        var page_no = Number($(taskPid + ">.el-pager>.active").html())
-        var next_page = page_no + 1
-        setPage(taskPid, taskPages, next_page, "+")
-        getTaskData(next_page)
-    })
-
-    function closeSuccess() {
-        $("#success").fadeOut()
-    }
-    function onOff() {
-        if ($("#onOff").hasClass("is-checked")) {
-            $("#onOff").removeClass("is-checked")
-        } else {
-            $("#onOff").addClass("is-checked")
-        }
-    }
-    function onOffSW() {
-        if ($("#onOff-add").hasClass("is-checked")) {
-            $("#onOff-add").removeClass("is-checked")
-        } else {
-            $("#onOff-add").addClass("is-checked")
-        }
-    }
-    function closeMsg() {
-        $("#task-edit").fadeOut()
-    }
-    function addTask() {
-        $("#task-add").fadeIn()
-    }
-    function closeMsg2() {
-        $("#task-add").fadeOut()
-    }
-    $("#tasks-body").on("click", ".modify-task", function (e) {
-        var tr = $(e.target).parent().parent().parent()
-        var tmp = $($(tr).children()[3]).html()
-        if (tmp.indexOf("gray") >= 0) {
-            var tEnabled = 0
-        } else {
-            var tEnabled = 1
-        }
-        var tId = Number($($($(tr).children()[0]).children()[0]).html())
-        var tName = $($($(tr).children()[1]).children()[0]).html()
-        var tDescription = $($($(tr).children()[2]).children()[0]).html()
-        var tEvery = Number($($($(tr).children()[4]).children()[0]).html())
-        var taskId = $(e.target).attr("tdid")
-        $("#input-name").val(tName)
-        $("#input-description").val(tDescription)
-        if (tEnabled == 1) {
-            $("#onOff").addClass("is-checked")
-        } else {
-            $("#onOff").removeClass("is-checked")
-        }
-        $("#input-every").val(tEvery)
-        $("#onOff").attr("tdid", tId)
-        $("#task-edit").fadeIn()
-    })
-    $("#tasks-body").on("click", ".del-task", function (e) {
-        var taskId = $(e.target).attr("tdid")
-        var item = {
-            "id": Number(taskId)
-        }
-        item["cud"] = "delete"
-        $.ajax({
-            type: "POST",
-            url: "/in/api/tools/v1/task",
-            dataType: "json",
-            headers: {
-                "Authorization": $.cookie("Authorization")
-            },
-            data: JSON.stringify(item),
-            contentType: "application/json;charset=utf-8",
-            success: function (json) {
-                if (json["msg"] == "删除数据成功") {
-                    $("#success").fadeIn()
-                    $("#success-title").html(json["msg"])
-                    setTimeout(function () {
-                        $("#success").fadeOut()
-                        location.reload(0)
-                    }, 1000)
-                } else {
-                    $("#error").fadeIn()
-                    $("#error-title").html("删除数据失败")
-                    setTimeout(function () {
-                        $("#error").fadeOut()
-                    }, 1000)
-                }
-            }
-        })
-    })
-    function modFun(op) {
-        if (op == "mod") {
-            if ($("#onOff").hasClass("is-checked")) {
-                ch = 1
-            } else {
-                ch = 0
-            }
-            var item = {
-                "id": Number($("#onOff").attr("tdid")),
-                "cud": "put",
-                "name": $("#input-name").val(),
-                "description": $("#input-description").val(),
-                "every": Number($("#input-every").val()),
-                "enabled": ch
-            }
-            $.ajax({
-                type: "POST",
-                url: "/in/api/tools/v1/task",
-                dataType: "json",
-                headers: {
-                    "Authorization": $.cookie("Authorization")
-                },
-                data: JSON.stringify(item),
-                contentType: "application/json;charset=utf-8",
-                success: function (json) {
-                    if (json["msg"] == "更新数据成功") {
-                        $("#success").fadeIn()
-                        $("#success-title").html(json["msg"])
-                        $("#task-edit").fadeOut()
-                        setTimeout(function () {
-                            $("#success").fadeOut()
-                            location.href = "?tabId=2"
-                        }, 1000)
-                    } else {
-                        $("#error").fadeIn()
-                        $("#error-title").html("更新数据失败")
-                        setTimeout(function () {
-                            $("#error").fadeOut()
-                        }, 1000)
-                    }
-                }
-            })
-        } else if (op == "add") {
-            if ($("#onOff-add").hasClass("is-checked")) {
-                ch = 1
-            } else {
-                ch = 0
-            }
-            var item = {
-                "cud": "post",
-                "name": $("#input-name-add").val(),
-                "description": $("#input-description-add").val(),
-                "every": Number($("#input-every-add").val()),
-                "enabled": ch
-            }
-            $.ajax({
-                type: "POST",
-                url: "/in/api/tools/v1/task",
-                dataType: "json",
-                headers: {
-                    "Authorization": $.cookie("Authorization")
-                },
-                data: JSON.stringify(item),
-                contentType: "application/json;charset=utf-8",
-                success: function (json) {
-                    if (json["msg"] == "新增数据成功") {
-                        $("#success").fadeIn()
-                        $("#success-title").html(json["msg"])
-                        $("#task-add").fadeOut()
-                        setTimeout(function () {
-                            $("#success").fadeOut()
-                            location.href = "?tabId=2"
-                        }, 1000)
-                    } else {
-                        $("#error").fadeIn()
-                        $("#error-title").html("新增数据成功")
-                        setTimeout(function () {
-                            $("#error").fadeOut()
-                        }, 1000)
-                    }
-                }
-            })
-        }
-    }
-</script>
 {{ end }}

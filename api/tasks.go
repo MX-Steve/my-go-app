@@ -133,12 +133,7 @@ func CudTasks(c *gin.Context) {
 		sqlStr = fmt.Sprintf(sqlStr, json.Name, json.Description, json.Enabled, date_changed, json.Every, json.Id)
 		log.Println(sqlStr)
 		err := task.CudTask(sqlStr)
-		if err != nil {
-			c.JSON(http.StatusExpectationFailed, gin.H{
-				"msg": err,
-			})
-			return
-		}
+		log.Println(err)
 		c.JSON(http.StatusOK, gin.H{
 			"msg": "更新数据成功",
 		})

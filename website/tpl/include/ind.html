@@ -1,82 +1,56 @@
 {{ define "ind" }}
-<div id="app" class="main">
-    <div class="el-row">
+<div class="main">
+    <el-row>
         {{range $label := .Headers}}
-        <div class="el-col-6">
-            <div class="el-card box-card is-always-shadow">
-                <div class="el-card__header">
-                    <div class="clearfix">
-                        <i class="{{$label.icon}}"></i>
-                        <span>{{$label.title}}</span>
-                    </div>
+        <el-col :span="6">
+            <el-card class="box-card" shadow="hover">
+                <div slot="header" class="clearfix">
+                    <i class="{{$label.icon}}"></i>
+                    <span>{{$label.title}}</span>
                 </div>
-                <div class="el-card__body">
+                <div>
                     <h3>{{$label.h3}}</h3>
                     <p>{{$label.p}}</p>
                 </div>
-            </div>
-        </div>
+            </el-card>
+        </el-col>
         {{end}}
-    </div>
-    <div class="el-row" style="margin-top: 25px;">
-        <div class="el-carousel el-carousel--horizontal el-carousel--card">
-            <div class="el-carousel__container" style="height: 200px;">
-                <button style="display: none;" type="button" class="el-carousel__arrow el-carousel__arrow--left">
-                    <i class="el-icon-arrow-left"></i>
-                </button>
-                <button style="display: none;" type="button" class="el-carousel__arrow el-carousel__arrow--right">
-                    <i class="el-icon-arrow-right"></i>
-                </button>
+    </el-row>
+    <el-row style="margin-top: 20px;">
+        <el-col :span="24">
+            <el-tag>唯一</el-tag>
+        </el-col>
+    </el-row>
+    <el-divider></el-divider>
+    <el-row style="margin-top: 25px;">
+        <el-col :span="24">
+            <el-carousel :interval="4000" type="card" height="200px">
                 {{range $index,$label := .Carousel02}}
-                <div class="el-carousel__item el-carousel__item--card is-in-stage"
-                    style="transform: translateX(-22.6525px) scale(0.83);">
-                    <div class="el-carousel__mask" style="display: none;">
-                        <img height="100%" src="{{$label.img}}" alt="" srcset="">
-                        <img height="100%" src="{{$label.img}}" alt="" srcset="">
-                        <img height="100%" src="{{$label.img}}" alt="" srcset="">
-                        <img height="100%" src="{{$label.img}}" alt="" srcset="">
-                        <img height="100%" src="{{$label.img}}" alt="" srcset="">
-                    </div>
-                    <h3 class="medium" style="text-align: center;">{{$label.title}}</h3>
-                </div>
+                <el-carousel-item style="background-color: #ddd;text-align: center;">
+                    <h3 class="medium">{{$label.title}}</h3>
+                    <img height="100%" src="{{$label.img}}" alt="" srcset="">
+                </el-carousel-item>
                 {{end}}
-            </div>
-        </div>
-    </div>
+            </el-carousel>
+        </el-col>
+    </el-row>
+    <el-row style="margin-top: 20px;">
+        <el-col :span="24">
+            <el-tag>价值</el-tag>
+        </el-col>
+    </el-row>
+    <el-divider></el-divider>
+    <el-row style="margin-top: 25px;">
+        <el-col :span="24">
+            <el-carousel :interval="4000" type="card" height="200px">
+                {{range $index,$label := .Carousel01}}
+                <el-carousel-item style="background-color: #ddd;text-align: center;">
+                    <h3 class="medium">{{$label.title}}</h3>
+                    <img height="100%" src="{{$label.img}}" alt="" srcset="">
+                </el-carousel-item>
+                {{end}}
+            </el-carousel>
+        </el-col>
+    </el-row>
 </div>
-<script>
-    var iW = window.innerWidth
-    var iH = window.innerHeight
-    var liW = $(".el-carousel__item").width()   // 550px
-    var picNum = $(".el-carousel__item").length // 5
-    var CarGr = [-20, iW / 2 - liW / 2, iW / 2, -20, iW / 2 - liW / 2]
-    $($(".el-carousel__item")[0]).attr("style", "transform: translateX(" + CarGr[0] + "px) scale(" + 0.83 + ");")
-    $($(".el-carousel__item")[1]).attr("style", "transform: translateX(" + CarGr[1] + "px) scale(" + 1 + ");z-index:999;")
-    $($(".el-carousel__item")[2]).attr("style", "transform: translateX(" + CarGr[2] + "px) scale(" + 0.83 + ");")
-    $($(".el-carousel__item")[3]).attr("style", "transform: translateX(" + CarGr[3] + "px) scale(" + 0.83 + ");")
-    $($(".el-carousel__item")[4]).attr("style", "transform: translateX(" + CarGr[4] + "px) scale(" + 0.83 + ");")
-    $($(".el-carousel__item")[1]).children(".el-carousel__mask").attr("style", "background-color: #fff;text-align: center;")
-    var num = 0
-    setInterval(function () {
-        var t0 = "transform: translateX(" + CarGr[num % picNum] + "px) scale(" + (num % picNum == 1 ? 1 : 0.83) + ");z-index:" + (num % picNum == 1 ? 999 : -999) + ";"
-        var t1 = "transform: translateX(" + CarGr[(num + 1) % picNum] + "px) scale(" + ((num + 1) % picNum == 1 ? 1 : 0.83) + ");z-index:" + ((num + 1) % picNum == 1 ? 999 : -999) + ";"
-        var t2 = "transform: translateX(" + CarGr[(num + 2) % picNum] + "px) scale(" + ((num + 2) % picNum == 1 ? 1 : 0.83) + ");z-index:" + ((num + 2) % picNum == 1 ? 999 : -999) + ";"
-        var t3 = "transform: translateX(" + CarGr[(num + 3) % picNum] + "px) scale(" + ((num + 3) % picNum == 1 ? 1 : 0.83) + ");z-index:" + ((num + 3) % picNum == 1 ? 999 : -999) + ";"
-        var t4 = "transform: translateX(" + CarGr[(num + 4) % picNum] + "px) scale(" + ((num + 4) % picNum == 1 ? 1 : 0.83) + ");z-index:" + ((num + 4) % picNum == 1 ? 999 : -999) + ";"
-        $($(".el-carousel__item")[0]).children(".el-carousel__mask").attr("style", (num % picNum == 1 ? "background-color: #fff;text-align: center;" : "display: none;background-color: #fff;text-align: center;"))
-        $($(".el-carousel__item")[1]).children(".el-carousel__mask").attr("style", ((num + 1) % picNum == 1 ? "background-color: #fff;text-align: center;" : "display: none;background-color: #fff;text-align: center;"))
-        $($(".el-carousel__item")[2]).children(".el-carousel__mask").attr("style", ((num + 2) % picNum == 1 ? "background-color: #fff;text-align: center;" : "display: none;background-color: #fff;text-align: center;"))
-        $($(".el-carousel__item")[3]).children(".el-carousel__mask").attr("style", ((num + 3) % picNum == 1 ? "background-color: #fff;text-align: center;" : "display: none;background-color: #fff;text-align: center;"))
-        $($(".el-carousel__item")[4]).children(".el-carousel__mask").attr("style", ((num + 4) % picNum == 1 ? "background-color: #fff;text-align: center;" : "display: none;background-color: #fff;text-align: center;"))
-        $($(".el-carousel__item")[0]).attr("style", t0)
-        $($(".el-carousel__item")[1]).attr("style", t1)
-        $($(".el-carousel__item")[2]).attr("style", t2)
-        $($(".el-carousel__item")[3]).attr("style", t3)
-        $($(".el-carousel__item")[4]).attr("style", t4)
-        num++
-        if (num >= picNum) {
-            num = 0
-        }
-    }, 3000)
-</script>
 {{ end }}

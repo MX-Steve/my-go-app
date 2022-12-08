@@ -1,55 +1,60 @@
 {{ define "home" }}
 <div id="home">
-    <div class="person-img">
-        <div style="height: 1px;"></div>
-        <div class="img-father" style="margin-top: 5px;">
-            <img id="photo" style="display: none;" width="120px" src="/public/images/self/man.jpg" alt="个人照片">
-        </div>
-        <h3>Name: <span id="username"></span> </h3>
-        <h4>Phone: <span id="phone"></span> </h4>
-        <p>Email: <span id="email"></span> </p>
-    </div>
-    <div class="logout list">
-        <i class="el-icon-close"></i>
-        退出
-    </div>
-    <div class="collect list">
-        <i class="el-icon-collection"></i>
-        收藏
-    </div>
-    <div class="self-page list">
-        <i class="el-icon-s-home"></i>
-        个人主页
-    </div>
-    <div id="toSettings" class="settings list">
-        <i class="el-icon-setting"></i>
-        设置
-    </div>
-    <div class="space list"></div>
-    {{ template "settings" . }}
+    <el-row>
+        <el-col :span="24">
+            <el-card style="background-color: rgb(0, 211, 255);text-align: center;">
+                <img width="120px"  :src="userInfo.photo" class="image">
+                <div style="padding: 14px;">
+                    <el-row>
+                        <el-col :offset="6" :span="10">
+                            <el-row>
+                                <el-col :span="6">
+                                    <h3 style="line-height: 40px;">Name: </h3>
+                                </el-col>
+                                <el-col :span="18">
+                                    <el-input v-model="userInfo.username" placeholder="请输入用户名" disabled="disabled"></el-input>
+                                </el-col>
+                            </el-row>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :offset="6" :span="10">
+                            <el-row>
+                                <el-col :span="6">
+                                    <h4 style="line-height: 40px;">Name: </h4>
+                                </el-col>
+                                <el-col :span="18">
+                                    <el-input v-model="userInfo.phone" placeholder="请输入电话" disabled="disabled"></el-input>
+                                </el-col>
+                            </el-row>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :offset="6" :span="10">
+                            <el-row>
+                                <el-col :span="6">
+                                    <p style="line-height: 40px;">Email: </p>
+                                </el-col>
+                                <el-col :span="18">
+                                    <el-input v-model="userInfo.email" placeholder="请输入电话" disabled="disabled"></el-input>
+                                </el-col>
+                            </el-row>
+                        </el-col>
+                    </el-row>
+                </div>
+            </el-card>
+        </el-col>
+    </el-row>
+    <el-descriptions style="margin: 25px auto;">
+        <el-descriptions-item label="退出">
+            <el-button type="text" class="default el-icon-close" size="mini" @click="logout"></el-button>
+        </el-descriptions-item>
+        <el-descriptions-item label="收藏">
+            <el-button type="text" class="default el-icon-collection" size="mini"></el-button>
+        </el-descriptions-item>
+        <el-descriptions-item label="设置">
+            <el-button type="text" class="default el-icon-setting" size="mini" @click="goToSettings"></el-button>
+        </el-descriptions-item>
+    </el-descriptions>
 </div>
-<script>
-    $.ajax({
-        url: "/in/api/userinfo",
-        type: "GET",
-        headers: {
-            "Authorization": $.cookie("Authorization")
-        },
-        success: function (json) {
-            $("#username").html(json.username)
-            $("#phone").html(json.phone)
-            $("#email").html(json.email)
-            $("#photo").attr("src", json.photo)
-            $("#photo").attr("style", "display: block;")
-        }
-    })
-    $(".logout").click(function(e){
-        $.cookie("Authorization", "")
-        location.href = "/login"
-    })
-    $("#toSettings").click(function(){
-        $("#settings").attr("style","z-index: 999")
-        $("#settings").fadeIn()
-    })
-</script>
 {{ end }}

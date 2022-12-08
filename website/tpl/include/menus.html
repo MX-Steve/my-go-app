@@ -1,93 +1,23 @@
 {{ define "menus" }}
 <div>
-    <div class="el-row menus-head">
-        <button type="button" class="el-button el-button--primary plan-head"  menuId="1">
-            计划列表
-        </button>
-        <button type="button" class="el-button el-button--default audit-head"  menuId="2">
-            审计日志
-        </button>
-        <button type="button" class="el-button el-button--default email-head"  menuId="3">
-            邮件发送
-        </button>
-        <button type="button" class="el-button el-button--default editor-head"  menuId="4">
-            文本编辑
-        </button>
-        <button type="button" class="el-button el-button--default articles-head"  menuId="5">
-            文本列表
-        </button>
-    </div>
-    <div class="menus-body">
-        <div class="body plan-body is-active" menuId="1">
-            {{template "plan" .}}
-        </div>
-        <div class="body audit-body" menuId="2">
-            {{template "audit" .}}
-        </div>
-        <div class="body email-body" menuId="3">
-            {{template "email" .}}
-        </div>
-        <div class="body editor-body" menuId="4">
-            {{template "editor" .}}
-        </div>
-        <div class="body articles-body" menuId="5">
-            {{template "articles" .}}
-        </div>
-    </div>
+   <el-form :inline="true" :model="article" class="demo-form-inline">
+        <el-form-item label="标题">
+            <el-input v-model="article.title" placeholder="文章标题"></el-input>
+        </el-form-item>
+        <el-form-item label="文章类型">
+            <el-select v-model="article.type" placeholder="文章类型">
+                <el-option v-for="(item,index) in articlesType" :key="index" :label="item" :value="item"></el-option>
+            </el-select>
+        </el-form-item>
+    </el-form>
+    <div id="example" name="example">
+        <textarea id="t1" name="t1" cols="100" rows="8" style="width:99%;min-height:300px;visibility:hidden;">
+        </textarea>
+        <input type="hidden" id="t2" value="" />
+        <input type="button" class="el-button el-button--primary" value="提交" onclick="preSave()" />
+    </div> 
 </div>
 <script>
-    function getUrlParams(key) {
-        var url = window.location.search.substr(1);
-        if (url == '') {
-            return false;
-        }
-        var paramsArr = url.split('&');
-        for (var i = 0; i < paramsArr.length; i++) {
-            var combina = paramsArr[i].split("=");
-            if (combina[0] == key) {
-                return combina[1];
-            }
-        }
-        return false;
-    }
-    var menuId = getUrlParams("menuId")
-    var tdid = getUrlParams("tdid")
-    if(tdid){
-        $(".editor-head").html("文本编辑")
-    } else {
-        $(".editor-head").html("文本新增")
-    }
-    if (menuId == 1) {
-        $(".menus-head>button").removeClass("el-button--primary el-button--default")
-        $(".menus-body>.body").removeClass("is-active")
-        $(".plan-head").addClass("el-button--primary")
-        $(".plan-body").addClass("is-active")
-    } else if (menuId == 2) {
-        $(".menus-head>button").removeClass("el-button--primary el-button--default")
-        $(".menus-body>.body").removeClass("is-active")
-        $(".audit-head").addClass("el-button--primary")
-        $(".audit-body").addClass("is-active")
-    } else if (menuId == 3) {
-        $(".menus-head>button").removeClass("el-button--primary el-button--default")
-        $(".menus-body>.body").removeClass("is-active")
-        $(".email-head").addClass("el-button--primary")
-        $(".email-body").addClass("is-active")
-    } else if (menuId == 4) {
-        $(".menus-head>button").removeClass("el-button--primary el-button--default")
-        $(".menus-body>.body").removeClass("is-active")
-        $(".editor-head").addClass("el-button--primary")
-        $(".editor-body").addClass("is-active")
-    } else if (menuId == 5) {
-        $(".menus-head>button").removeClass("el-button--primary el-button--default")
-        $(".menus-body>.body").removeClass("is-active")
-        $(".articles-head").addClass("el-button--primary")
-        $(".articles-body").addClass("is-active")
-    }
-    $(".menus-head>button").click(function (e) {
-        var baseUrl="/?tabId=1&menuId="
-        var menuId=$(e.target).attr("menuId")
-        var url = baseUrl+menuId
-        location.href=url
-    })
+    
 </script>
 {{ end }}

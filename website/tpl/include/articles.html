@@ -1,257 +1,38 @@
 {{ define "articles" }}
-<div class="articles-html">
-    <div class="el-row">
-        <div class="el-col el-col-6">
-            <div class="el-select option-type">
-                <div class="el-input el-input--suffix">
-                    <input id="option-type" type="text" readonly="readonly" autocomplete="off" placeholder="请选择类型"
-                        class="el-input__inner">
-                    <span class="el-input__suffix">
-                        <span class="el-input__suffix-inner">
-                            <i class="el-select__caret el-input__icon el-icon-arrow-up option-select-arrow"></i>
-                        </span>
-                    </span>
-                </div>
-                <div class="el-select-dropdown el-popper option-select-body"
-                    style="display:none; min-width: 240px; transform-origin: center top; z-index: 2006; position: absolute; top: 40px; left: 0px;"
-                    x-placement="bottom-start">
-                    <div class="el-scrollbar" style="">
-                        <div class="el-select-dropdown__wrap el-scrollbar__wrap"
-                            style="margin-bottom: -17px; margin-right: -17px;">
-                            <ul class="el-scrollbar__view el-select-dropdown__list">
-                                <!---->
-                                <li class="el-select-dropdown__item hover">backend</li>
-                                <li class="el-select-dropdown__item">frontend</li>
-                                <li class="el-select-dropdown__item">db</li>
-                                <li class="el-select-dropdown__item">structure</li>
-                                <li class="el-select-dropdown__item">security</li>
-                                <li class="el-select-dropdown__item">network</li>
-                                <li class="el-select-dropdown__item">python</li>
-                                <li class="el-select-dropdown__item">shell</li>
-                                <li class="el-select-dropdown__item">go</li>
-                                <li class="el-select-dropdown__item">other</li>
-                            </ul>
-                        </div>
-                        <div class="el-scrollbar__bar is-horizontal">
-                            <div class="el-scrollbar__thumb" style="transform: translateX(0%);"></div>
-                        </div>
-                        <div class="el-scrollbar__bar is-vertical">
-                            <div class="el-scrollbar__thumb" style="transform: translateY(0%);"></div>
-                        </div>
-                    </div>
-                    <div x-arrow="" class="popper__arrow" style="left: 35px;"></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-col el-col-8">
-            <div class="el-input">
-                <input id="articles-name" type="text" autocomplete="off" placeholder="标题关键词" class="el-input__inner">
-            </div>
-        </div>
-        <div class="el-col el-col-2">
-            <button class="el-button el-button--primary" onclick="search()">搜索</button>
-        </div>
-    </div>
-    <div id="articles-table" class="el-table el-table--fit el-table--enable-row-hover el-table--enable-row-transition"
-        style="width: 100%;">
-        <div class="el-table__header-wrapper">
-            <table cellspacing="0" cellpadding="0" border="0" class="el-table__header">
-                <colgroup>
-                    <col name="el-table_1_column_1" width="80">
-                    <col name="el-table_1_column_2" width="500">
-                    <col name="el-table_1_column_3" width="200">
-                    <col name="el-table_1_column_4" width="250">
-                    <col name="el-table_1_column_9" width="200">
-                    <col name="gutter" width="0">
-                </colgroup>
-                <thead class="has-gutter">
-                    <tr class="">
-                        <th colspan="1" rowspan="1" class="el-table_1_column_1     is-leaf el-table__cell">
-                            <div class="cell">ID</div>
-                        </th>
-                        <th colspan="1" rowspan="1" class="el-table_1_column_2     is-leaf el-table__cell">
-                            <div class="cell">标题</div>
-                        </th>
-                        <th colspan="1" rowspan="1" class="el-table_1_column_3     is-leaf el-table__cell">
-                            <div class="cell">类型</div>
-                        </th>
-                        <th colspan="1" rowspan="1" class="el-table_1_column_4     is-leaf el-table__cell">
-                            <div class="cell">时间</div>
-                        </th>
-                        <th colspan="1" rowspan="1" class="el-table_1_column_9     is-leaf el-table__cell">
-                            <div class="cell">操作</div>
-                        </th>
-                        <th class="el-table__cell gutter" style="width: 0px; display: none;"></th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-        <div class="el-table__body-wrapper is-scrolling-none">
-            <table cellspacing="0" cellpadding="0" border="0" class="el-table__body">
-                <colgroup>
-                    <col name="el-table_1_column_1" width="80">
-                    <col name="el-table_1_column_2" width="500">
-                    <col name="el-table_1_column_3" width="200">
-                    <col name="el-table_1_column_4" width="250">
-                    <col name="el-table_1_column_9" width="200">
-                </colgroup>
-                <tbody id="articles-body"></tbody>
-            </table>
-        </div>
-        <div class="el-table__column-resize-proxy" style="display: none;"></div>
-    </div>
-    <div id="articles-pagination" style="margin-top: 10px;" class="el-pagination is-background">
-        <button type="button" disabled="disabled" class="btn-prev el-icon el-icon-arrow-left"></button>
-        <ul class="el-pager"></ul>
-        <button type="button" class="btn-next el-icon el-icon-arrow-right"></button>
-    </div>
-    <div id="articles-success" role="alert" class="el-alert el-alert--success is-dark" style="display: none;position: fixed; top: 50%;left: 0;">
-        <div class="el-alert__content">
-            <span class="el-alert__title" id="articles-success-title">成功提示的文案</span>
-            <i class="el-alert__closebtn el-icon-close"></i>
-        </div>
-    </div>
-    <div id="articles-error" role="alert" class="el-alert el-alert--error is-dark" style="display: none;position: fixed; top: 50%;left: 0;">
-        <div class="el-alert__content">
-            <span id="articles-error-title" class="el-alert__title">错误提示的文案</span>
-            <i class="el-alert__closebtn el-icon-close"></i>
-        </div>
-    </div>
+<div class="main">
+    <el-form :inline="true" :model="articleInline" class="demo-form-inline">
+        <el-form-item label="关键词">
+            <el-input v-model="articleInline.key" placeholder="关键词搜索"></el-input>
+        </el-form-item>
+        <el-form-item label="文章类型">
+            <el-select v-model="articleInline.type" placeholder="文章类型">
+                <el-option v-for="(item,index) in articlesType" :key="index" :label="item" :value="item"></el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item>
+            <el-button type="primary" @click="articleSearch">查询</el-button>
+        </el-form-item>
+    </el-form>
+    <el-button type="text" class="el-icon-circle-plus" @click="NewArticles"></el-button>
+    <el-table :data="articlesList" style="width: 100%">
+        <el-table-column prop="id" label="ID" width="60">
+        </el-table-column>
+        <el-table-column prop="title" label="标题" width="350">
+        </el-table-column>
+        <el-table-column prop="type" label="类型" width="80">
+        </el-table-column>
+        <el-table-column prop="created_at" label="更新时间" width="180">
+        </el-table-column>
+        <el-table-column label="操作" width="120">
+            <template slot-scope="scope">
+                <el-button type="text" size="mini" class="el-icon-edit" @click="editArticles(scope.row.id)"></el-button>
+                <el-button type="text" size="mini" class="el-icon-delete" @click="delArticles(scope.row.id)">
+                </el-button>
+            </template>
+        </el-table-column>
+    </el-table>
+    <el-pagination :currentPage="articlesNo" :hide-on-single-page="true" background layout="prev, pager, next"
+        @current-change="articlesPageChange" :total="articlesTotalCount">
+    </el-pagination>
 </div>
-<script src="/public/js/page.js"></script>
-<script>
-    var pid = "#articles-pagination"
-    var pages = 1
-    var articlesTitle = ""
-    var articlesType = ""
-    function search() {
-        articlesTitle = $("#articles-name").val()
-        articlesType = $("#option-type").val()
-        getArticlesData(1, articlesType, articlesTitle)
-        setPage(pid, pages, 1, "+")
-    }
-    $(".option-type input").click(function (e) {
-        if ($(".option-select-arrow").hasClass("el-icon-arrow-up")) {
-            $(".option-select-arrow").removeClass("el-icon-arrow-up")
-            $(".option-select-arrow").addClass("el-icon-arrow-down")
-            $(".option-select-body").fadeIn()
-        } else {
-            $(".option-select-arrow").removeClass("el-icon-arrow-down")
-            $(".option-select-arrow").addClass("el-icon-arrow-up")
-            $(".option-select-body").fadeOut()
-        }
-    })
-    $(".option-select-body li").click(function (e) {
-        $(".option-select-body li").removeClass("hover")
-        $(e.target).addClass("hover")
-        var optionType = $(e.target).html()
-        $(".option-type input").val(optionType)
-        $(".option-select-arrow").removeClass("el-icon-arrow-down")
-        $(".option-select-arrow").addClass("el-icon-arrow-up")
-        $(".option-select-body").fadeOut()
-    })
-    function getArticlesData(page_no, type, title) {
-        var url = "/in/api/tools/v1/article?page_no=" + page_no
-        if (type != "") {
-            url += "&type=" + type
-        }
-        if (title != "") {
-            url += "&title=" + title + "&content=" + title
-        }
-        $.ajax({
-            url: url,
-            type: "GET",
-            headers: {
-                "Authorization": $.cookie("Authorization")
-            },
-            async: false,
-            success: function (json) {
-                pages = json.pages
-                var json = json.data
-                var str = ""
-                for (var i = 0; i < json.length; i++) {
-                    var item = json[i]
-                    str += "<tr class='el-table__row'><td rowspan='1' colspan='1' class='el-table_1_column_1   el-table__cell'><div class='cell'>"
-                    str += item.id
-                    str += "</div></td><td rowspan='1' colspan='1' class='el-table_1_column_2   el-table__cell'><div class='cell'>"
-                    str += item.title
-                    str += "</div></td><td rowspan='1' colspan='1' class='el-table_1_column_3   el-table__cell'><div class='cell'>"
-                    str += item.type
-                    str += "</div></td><td rowspan='1' colspan='1' class='el-table_1_column_4   el-table__cell'><div class='cell'>"
-                    str += item.created_at
-                    str += "</div></td><td rowspan='1' colspan='1' class='el-table_1_column_8   el-table__cell'><div class='cell'><button type='button' tdid='" + item.id + "' class='modify-articles el-button el-button--primary is-circle  el-icon-edit' size='mini'></button><button tdid='" + item.id + "' type='button' class='del-articles el-button el-button--danger is-circle el-icon-delete' size='mini'></button></div></td></tr>"
-                }
-                $("#articles-body").html(str)
-            }
-        })
-    }
-    getArticlesData(1, articlesType, articlesTitle)
-    setPage(pid, pages, 1, "+")
-    $(".el-pager").click(function (e) {
-        $(".el-pager>li").removeClass("active")
-        $(e.target).addClass("active")
-        var page_no = $(e.target).html()
-        getArticlesData(page_no, articlesType, articlesTitle)
-        if (page_no != 1) {
-            $(pid + ">.btn-prev").attr("disabled", false)
-        } else {
-            $(pid + ">.btn-prev").attr("disabled", true)
-        }
-        if (page_no == pages) {
-            $(pid + ">.btn-next").attr("disabled", true)
-        } else {
-            $(pid + ">.btn-next").attr("disabled", false)
-        }
-    })
-
-    $(pid + ">.btn-prev").click(function (e) {
-        var page_no = $(pid + ">.el-pager>.active").html()
-        var next_page = page_no - 1
-        setPage(pid, pages, next_page, "-")
-        getArticlesData(next_page, articlesType, articlesTitle)
-    })
-    $(pid + ">.btn-next").click(function (e) {
-        var page_no = Number($(pid + ">.el-pager>.active").html())
-        var next_page = page_no + 1
-        setPage(pid, pages, next_page, "+")
-        getArticlesData(next_page, articlesType, articlesTitle)
-    })
-    $(".articles-body").on("click", ".modify-articles", function (e) {
-        var id = $(e.target).attr("tdid")
-        location.href = "/?tabId=1&menuId=4&tdid=" + id
-    })
-    $(".articles-body").on("click", ".del-articles", function (e) {
-        var id = $(e.target).attr("tdid")
-        var data = {
-            "id": Number(id),
-            "cud": "delete"
-        }
-        $.ajax({
-            url: "/in/api/tools/v1/article",
-            type: "POST",
-            dataType: "json",
-            headers: {
-                "Authorization": $.cookie("Authorization")
-            },
-            data: JSON.stringify(data),
-            contentType: "application/json;charset=utf-8",
-            success: function (json) {
-                if (json["msg"] == "删除数据成功") {
-                    $("#articles-success").fadeIn()
-                    $("#articles-success-title").html(json["msg"])
-                    setTimeout(function () {
-                        $("#articles-success").fadeOut()
-                        location.href = "?tabId=1&menuId=5"
-                    }, 1000)
-                } else {
-                    $("#articles-error").fadeIn()
-                    $("#articles-error-title").html("更新或新增数据失败")
-                    setTimeout(function () {
-                        $("#articles-error").fadeOut()
-                    }, 1000)
-                }
-            }
-        })
-    })
-</script>
 {{ end }}

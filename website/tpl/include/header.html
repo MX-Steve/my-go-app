@@ -1,4 +1,5 @@
 {{ define "header" }}
+
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport"
@@ -8,14 +9,19 @@
 	<title>{{ .Title }}</title>
 	<link rel="stylesheet" href="/public/css/common.css">
 	<link rel="stylesheet" href="/public/css/index.css">
+	<link rel="stylesheet" href="/public/css/login.css">
+	<link rel="stylesheet" href="/kindeditor/themes/qq/qq.css">
+    <link rel="stylesheet" href="/kindeditor/plugins/code/prettify.css">
 	<link href="/public/css/font-awesome.css?v=4.4.0" rel="stylesheet">
 	<link rel="stylesheet" href="/public/css/elmentui.css">
 	<script src="https://unpkg.com/vue@2/dist/vue.js"></script>
-	<link rel="alternate icon" class="js-site-favicon" href="/public/favicon.ico">
-
 	<!-- import JavaScript -->
 	<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+	<script src="/public/js/vue-router.global.prod.js"></script>
 	<script src="/public/lib/jquery-3.1.1.min.js"></script>
 	<script src="/public/lib/jquery.cookie.js"></script>
+	<script src="/kindeditor/js/kindeditor-all.js"></script>
+	<script src="/kindeditor/lang/zh-CN.js"></script>
+	<script src="/kindeditor/plugins/code/prettify.js"></script>
 </head>
 {{ end }}

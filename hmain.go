@@ -3,6 +3,7 @@ package main
 // go-bindata -o asset/asset.go -pkg asset  website/...
 
 import (
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -57,8 +58,8 @@ func runRouterMain() {
 		authGroup.POST("/api/usermodphoto", api.ModPhoto)
 		authGroup.POST("/api/sendemail", api.SendEmail)
 	}
-
-	router.Run(":7715")
+	port := vip.GetIniData("version.port")
+	router.Run(fmt.Sprintf(":%s", port))
 }
 
 func runRouterFile() {
