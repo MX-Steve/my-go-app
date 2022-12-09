@@ -1,5 +1,6 @@
 {{ define "tasks" }}
 <div class="main">
+    <h3 style="text-align: center;margin: 15px auto;">任务列表</h3>
     <el-button type="text" class="el-icon-circle-plus" @click="openNewTaskDialog"></el-button>
     <el-table :data="taskList" style="width: 100%">
         <el-table-column prop="id" label="ID" width="60">

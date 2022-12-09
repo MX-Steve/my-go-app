@@ -14,10 +14,12 @@ func GetAudits(c *gin.Context) {
 	c.Next()
 	pageNo := c.DefaultQuery("page_no", "1")
 	pageSize := c.DefaultQuery("page_size", "10")
+	name := c.DefaultQuery("name", "")
+	operator := c.DefaultQuery("operator", "")
 	pageNo1, _ := strconv.Atoi(pageNo)
 	pageSize1, _ := strconv.Atoi(pageSize)
 	audit := &model.Audit{}
-	data, _ := audit.GetAudits()
+	data, _ := audit.GetAudits(name, operator)
 	s := 0
 	e := 1
 	if pageSize1 > len(data) {

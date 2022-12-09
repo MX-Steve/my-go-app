@@ -1,0 +1,25 @@
+{{define "toolsmanage"}}
+<div class="main">
+    <h3 style="text-align: center;margin: 15px auto;">程序面板</h3>
+    <el-form ref="toolsmanage" :model="toolsmanage" label-width="80px">
+        <el-form-item label="程序名称">
+            <el-input v-model="toolsmanage.name"></el-input>
+        </el-form-item>
+        <el-form-item label="程序位置">
+            <el-input v-model="toolsmanage.bin"></el-input>
+        </el-form-item>
+        <el-form-item label="源码位置">
+            <el-input v-model="toolsmanage.src"></el-input>
+        </el-form-item>
+        <el-form-item label="程序类型">
+            <el-input v-model="toolsmanage.type"></el-input>
+        </el-form-item>
+        <el-form-item label="是否可用">
+            <el-switch disabled="disabled" v-model="toolsmanage.enabled" :inactive-value="0" :active-value="1"></el-switch>
+        </el-form-item>
+        <el-form-item>
+            <el-button :disabled="toolsmanage.enabled != 1" type="success" size="mini" @click="toolsRun">执行</el-button>
+        </el-form-item>
+    </el-form>
+</div>
+{{end}}

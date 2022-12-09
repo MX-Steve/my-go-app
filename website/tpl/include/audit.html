@@ -1,126 +1,31 @@
 {{ define "audit" }}
-<div>
-    <div id="audit-table" class="el-table el-table--fit el-table--enable-row-hover el-table--enable-row-transition"
-        style="width: 100%;">
-        <div class="el-table__header-wrapper">
-            <table cellspacing="0" cellpadding="0" border="0" class="el-table__header">
-                <colgroup>
-                    <col name="el-table_1_column_1" width="80">
-                    <col name="el-table_1_column_2" width="200">
-                    <col name="el-table_1_column_3" width="800">
-                    <col name="el-table_1_column_8" width="280">
-                    <col name="el-table_1_column_9" width="150">
-                    <col name="gutter" width="0">
-                </colgroup>
-                <thead class="has-gutter">
-                    <tr class="">
-                        <th colspan="1" rowspan="1" class="el-table_1_column_1     is-leaf el-table__cell">
-                            <div class="cell">ID</div>
-                        </th>
-                        <th colspan="1" rowspan="1" class="el-table_1_column_2     is-leaf el-table__cell">
-                            <div class="cell">操作</div>
-                        </th>
-                        <th colspan="1" rowspan="1" class="el-table_1_column_3     is-leaf el-table__cell">
-                            <div class="cell">描述</div>
-                        </th>
-                        <th colspan="1" rowspan="1" class="el-table_1_column_8     is-leaf el-table__cell">
-                            <div class="cell">时间</div>
-                        </th>
-                        <th colspan="1" rowspan="1" class="el-table_1_column_9     is-leaf el-table__cell">
-                            <div class="cell">操作员</div>
-                        </th>
-                        <th class="el-table__cell gutter" style="width: 0px; display: none;"></th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-        <div class="el-table__body-wrapper is-scrolling-none">
-            <table cellspacing="0" cellpadding="0" border="0" class="el-table__body">
-                <colgroup>
-                    <col name="el-table_1_column_1" width="80">
-                    <col name="el-table_1_column_2" width="200">
-                    <col name="el-table_1_column_3" width="800">
-                    <col name="el-table_1_column_8" width="280">
-                    <col name="el-table_1_column_9" width="150">
-                </colgroup>
-                <tbody id="audit-body"></tbody>
-            </table>
-        </div>
-        <div class="el-table__column-resize-proxy" style="display: none;"></div>
-    </div>
-    <div id="audit-pagination" style="margin-top: 10px;" class="el-pagination is-background">
-        <button type="button" disabled="disabled" class="btn-prev el-icon el-icon-arrow-left"></button>
-        <ul class="el-pager"></ul>
-        <button type="button" class="btn-next el-icon el-icon-arrow-right"></button>
-    </div>
+<div class="main">
+        <h3 style="text-align: center;margin: 15px auto;">审计日志</h3>
+    <el-form :inline="true" :model="auditInline" class="demo-form-inline">
+        <el-form-item label="关键词">
+            <el-input v-model="auditInline.name" placeholder="关键词搜索"></el-input>
+        </el-form-item>
+        <el-form-item label="操作员">
+            <el-input v-model="auditInline.operator" placeholder="操作员搜索"></el-input>
+        </el-form-item>
+        <el-form-item>
+            <el-button type="primary" @click="auditSearch">查询</el-button>
+        </el-form-item>
+    </el-form>
+    <el-table :data="auditList" style="width: 100%">
+        <el-table-column prop="id" label="ID" width="60">
+        </el-table-column>
+        <el-table-column prop="name" label="操作" width="120">
+        </el-table-column>
+        <el-table-column prop="description" label="描述" width="300">
+        </el-table-column>
+        <el-table-column prop="update_time" label="操作时间" width="180">
+        </el-table-column>
+        <el-table-column prop="operator" label="操作员" width="120">
+        </el-table-column>
+    </el-table>
+    <el-pagination :currentPage="auditNo" :hide-on-single-page="true" background layout="prev, pager, next"
+        @current-change="auditPageChange" :total="auditTotalCount">
+    </el-pagination>
 </div>
-<script src="/public/js/page.js"></script>
-<script>
-    var auditPages = 1
-    function getAuditData(page_no) {
-        $.ajax({
-            url: "/in/api/tools/v1/audit?page_no=" + page_no,
-            type: "GET",
-            headers: {
-                "Authorization": $.cookie("Authorization")
-            },
-            async: false,
-            success: function (json) {
-                auditPages = json.pages
-                var json = json.data
-                var str = ""
-                for (var i = 0; i < json.length; i++) {
-                    var item = json[i]
-                    str += "<tr class='el-table__row'>"
-                    str += "<td rowspan='1' colspan='1' class='el-table_1_column_1   el-table__cell'>"
-                    str += "<div class='cell'>" + item.id + "</div>"
-                    str += "</td>"
-                    str += "<td rowspan='1' colspan='1' class='el-table_1_column_2   el-table__cell'>"
-                    str += "<div class='cell'>" + item.name + "</div>"
-                    str += "</td>"
-                    str += "<td rowspan='1' colspan='1' class='el-table_1_column_3   el-table__cell'>"
-                    str += "<div class='cell'>" + item.description + "</div>"
-                    str += "</td>"
-                    str += "<td rowspan='1' colspan='1' class='el-table_1_column_8   el-table__cell'>"
-                    str += "<div class='cell'>" + item.update_time + "</div>"
-                    str += "</td>"
-                    str += "<td rowspan='1' colspan='1' class='el-table_1_column_9   el-table__cell'>"
-                    str += "<div class='cell'>" + item.operator + "</div></td></tr>"
-                }
-                $("#audit-body").html(str)
-            }
-        })
-    }
-    var auditPid = "#audit-pagination"
-    getAuditData(1)
-    setPage(auditPid, auditPages, 1, "+")
-    $(".el-pager").click(function (e) {
-        $(".el-pager>li").removeClass("active")
-        $(e.target).addClass("active")
-        var page_no = $(e.target).html()
-        getAuditData(page_no)
-        if (page_no != 1) {
-            $(auditPid + ">.btn-prev").attr("disabled", false)
-        } else {
-            $(auditPid + ">.btn-prev").attr("disabled", true)
-        }
-        if (page_no == auditPages) {
-            $(auditPid + ">.btn-next").attr("disabled", true)
-        } else {
-            $(auditPid + ">.btn-next").attr("disabled", false)
-        }
-    })
-    $(auditPid + ">.btn-prev").click(function (e) {
-        var page_no = $(auditPid + ">.el-pager>.active").html()
-        var next_page = page_no - 1
-        setPage(auditPid, auditPages, next_page, "-")
-        getAuditData(next_page)
-    })
-    $(auditPid + ">.btn-next").click(function (e) {
-        var page_no = Number($(auditPid + ">.el-pager>.active").html())
-        var next_page = page_no + 1
-        setPage(auditPid, auditPages, next_page, "+")
-        getAuditData(next_page)
-    })
-</script>
 {{ end }}

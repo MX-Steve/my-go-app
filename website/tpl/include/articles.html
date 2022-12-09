@@ -1,5 +1,6 @@
 {{ define "articles" }}
 <div class="main">
+    <h3 style="text-align: center;margin: 15px auto;">文章列表</h3>
     <el-form :inline="true" :model="articleInline" class="demo-form-inline">
         <el-form-item label="关键词">
             <el-input v-model="articleInline.key" placeholder="关键词搜索"></el-input>

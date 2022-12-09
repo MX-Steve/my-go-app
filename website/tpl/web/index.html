@@ -18,8 +18,20 @@
             <div v-else-if="activeIndex2 == '2-3'">
                 {{template "editor" .}}
             </div>
-            <div v-else-if="activeIndex2 == 3">
+            <div v-else-if="activeIndex2 == '2-4'">
+                {{template "audit" .}}
+            </div>
+            <div v-else-if="activeIndex2 == '2-5'">
                 {{template "tasks" .}}
+            </div>
+            <div v-else-if="activeIndex2 == '2-6'">
+                {{template "tools" .}}
+            </div>
+            <div v-else-if="activeIndex2.startsWith('3-1-') || activeIndex2.startsWith('3-2-')">
+                {{template "toolsmanage" .}}
+            </div>
+            <div v-else-if="activeIndex2 == '3-3-1'">
+                {{template "email" .}}
             </div>
             <div v-else-if="activeIndex2 == 4">
                 {{template "home" .}}
@@ -40,14 +52,29 @@
                 <el-menu-item index="2-1">计划列表</el-menu-item>
                 <el-menu-item index="2-2">文章列表</el-menu-item>
                 <el-menu-item index="2-3">新增文章</el-menu-item>
-                <el-submenu index="2-4">
-                    <template slot="title">选项4</template>
-                    <el-menu-item index="2-4-1">选项1</el-menu-item>
-                    <el-menu-item index="2-4-2">选项2</el-menu-item>
-                    <el-menu-item index="2-4-3">选项3</el-menu-item>
+                <el-menu-item index="2-4">审计日志</el-menu-item>
+                <el-menu-item index="2-5">任务列表</el-menu-item>
+                <el-menu-item index="2-6">工具列表</el-menu-item>
+            </el-submenu>
+            <el-submenu index="3">
+                <template slot="title">工具管理</template>
+                <el-submenu index="3-1">
+                    <template slot="title">开发工具</template>
+                    <el-menu-item v-for="(item,i) in devTools" :key="i" v-html="item.name"
+                        :index="'3-1-'+item.id"></el-menu-item>
+                </el-submenu>
+                <el-submenu index="3-2">
+                    <template slot="title">运维工具</template>
+                    <el-menu-item v-for="(item,i) in opTools" :key="i" v-html="item.name"
+                        :index="'3-2-'+item.id"></el-menu-item>
+                </el-submenu>
+                <el-submenu index="3-3">
+                    <template slot="title">其他工具</template>
+                    <el-menu-item index="3-3-1">群发邮件</el-menu-item>
+                    <el-menu-item v-for="(item,i) in otherTools" :key="i" v-html="item.name"
+                        :index="'3-3-'+item.id"></el-menu-item>
                 </el-submenu>
             </el-submenu>
-            <el-menu-item index="3">个人管理</el-menu-item>
             <el-menu-item index="4">
                 个人中心
             </el-menu-item>
@@ -123,6 +150,56 @@
                 article: {},
                 editor1: undefined,
                 tdid: 0,
+                email: {
+                    elists: "",
+                    ebody: `
+
+以上，谢谢！
+祝身体健康，工作顺利，万事如意！
+---------------------------------------------------------
+
+李韩
+TEL: 18262629610
+EMAIL: mx_steve@163.com`,
+                    etitle: "",
+                    smtp: "smtp.163.com:25",
+                    epwd: "GDQFQYVUXMDVKBXS",
+                    ename: "mx_steve@163.com"
+                },
+                auditNo: 1,
+                auditSize: 10,
+                auditPages: 1,
+                auditTotalCount: 1,
+                auditList: [],
+                auditInline: {
+                    name: '',
+                    operator: "",
+                },
+                toolsmanage: {
+                    name: "比较器",
+                    bin: "D:/data/go/bin/compare.exe",
+                    src: "D:/data/go/src",
+                    enabled: 1,
+                    type: "go"
+                },
+                toolsNo: 1,
+                toolsSize: 10,
+                toolsPages: 1,
+                toolsTotalCount: 1,
+                toolsList: [],
+                toolsDialogVisible: false,
+                tools: {
+                    name: "",
+                    bin: "",
+                    src: "",
+                    type: "",
+                    del_tag: 0,
+                    enabled: 0,
+                },
+                toolsDialogTitle: "",
+                devTools: [],
+                opTools: [],
+                otherTools: [],
             }
         },
         computed: {
@@ -138,14 +215,22 @@
                 this.activeIndex2 = key
                 if (this.activeIndex2 == 4) {
                     this.getUserInfo()
-                } else if (this.activeIndex2 == 3) {
-                    this.getTasks()
                 } else if (this.activeIndex2 == '2-1') {
                     this.getPlans()
                 } else if (this.activeIndex2 == '2-2') {
                     this.getArticles()
                 } else if (this.activeIndex2 == '2-3') {
                     this.kedit("t1")
+                } else if (this.activeIndex2 == '2-4') {
+                    this.getAudit()
+                } else if (this.activeIndex2 == '2-5') {
+                    this.getTasks()
+                } else if (this.activeIndex2 == '2-6') {
+                    this.getTools()
+                } else if (this.activeIndex2.startsWith("3-1-") || this.activeIndex2.startsWith("3-2-")) {
+                    var tmp = this.activeIndex2.split("-")
+                    var id = Number(tmp[tmp.length - 1])
+                    this.getToolsById(id)
                 }
             },
             // 用户中心方法
@@ -433,6 +518,9 @@
                             var self = this;
                         }
                     });
+                    if (that.article.type == "go" || that.article.type == "shell" || that.article.type == "python") {
+                        $("[title='HTML代码']").click()
+                    }
                 }, 500)
             },
             preSave() {
@@ -458,7 +546,7 @@
                     }
                 })
             },
-            editArticles(id){
+            editArticles(id) {
                 this.tdid = id;
                 var that = this;
                 $.ajax({
@@ -472,16 +560,225 @@
                         console.log(json)
                         that.activeIndex2 = "2-3"
                         that.kedit("t1")
-                        that.article.title=json.title
-                        that.article.type=json.type
-                        that.article.content=json.content
+                        that.article.title = json.title
+                        that.article.type = json.type
+                        that.article.content = json.content
                     }
                 })
-            }
+            },
+            // 群发邮件
+            sendEmail() {
+                var that = this;
+                var data = that.email;
+                var elists = that.email.elists;
+                elists = elists.replace(/\n/g, ";")
+                data["elists"] = elists
+                $.ajax({
+                    type: "POST",
+                    url: "/in/api/sendemail",
+                    dataType: "json",
+                    headers: that.headers,
+                    data: JSON.stringify(that.email),
+                    contentType: "application/json;charset=utf-8",
+                    success: function (json) {
+                        if (json["msg"] == "发送邮件成功") {
+                            that.$message.success("发送邮件成功")
+                        } else {
+                            that.$message.error("发送邮件失败")
+                        }
+                    }
+                })
+            },
+            noSendEmail() {
+                this.email = {
+                    elists: "",
+                    ebody: `
+
+以上，谢谢！
+祝身体健康，工作顺利，万事如意！
+---------------------------------------------------------
+
+李韩
+TEL: 18262629610
+EMAIL: mx_steve@163.com`,
+                    etitle: "",
+                    smtp: "smtp.163.com:25",
+                    epwd: "GDQFQYVUXMDVKBXS",
+                    ename: "mx_steve@163.com"
+                }
+            },
+            // 审计日志功能集合
+            getAudit() {
+                var that = this;
+                $.ajax({
+                    url: "/in/api/tools/v1/audit",
+                    type: "GET",
+                    data: {
+                        page_no: that.auditNo,
+                        name: that.auditInline.name,
+                        operator: that.auditInline.operator,
+                    },
+                    headers: that.headers,
+                    success: function (json) {
+                        that.auditPages = json.pages;
+                        that.auditList = json.data;
+                        that.auditTotalCount = json.pages * that.auditSize;
+                    }
+                })
+            },
+            auditPageChange(val) {
+                this.auditNo = val;
+                this.getAudit()
+            },
+            auditSearch() {
+                this.getAudit()
+            },
+            // 工具方法集
+            getTools() {
+                var that = this;
+                $.ajax({
+                    url: "/in/api/tools/v1/toolsmanage?page_no=" + that.toolsNo,
+                    type: "GET",
+                    headers: that.headers,
+                    success: function (json) {
+                        that.toolsPages = json.pages;
+                        that.toolsList = json.data;
+                        that.toolsTotalCount = json.pages * that.toolsSize;
+                    }
+                })
+            },
+            getToolsById(id) {
+                var that = this;
+                $.ajax({
+                    url: "/in/api/tools/v1/toolsmanagebyid?id=" + id,
+                    type: "GET",
+                    headers: that.headers,
+                    success: function (json) {
+                        that.toolsmanage = json;
+                    }
+                })
+            },
+            toolsMenu() {
+                var that = this;
+                $.ajax({
+                    url: "/in/api/tools/v1/toolsmanage?page_no=1&page_size=1000",
+                    type: "GET",
+                    headers: that.headers,
+                    success: function (json) {
+                        var data = json.data
+                        for (var i = 0; i < data.length; i++) {
+                            var item = data[i]
+                            if (item.type == "开发工具") {
+                                that.devTools.push(item)
+                            } else if (item.type == "运维工具") {
+                                that.opTools.push(item)
+                            } else {
+                                that.otherTools.push(item)
+                            }
+                        }
+                    }
+                })
+            },
+            toolsPageChange(val) {
+                this.toolsNo = val;
+                this.getTools()
+            },
+            delTools(id) {
+                var that = this;
+                var data = {
+                    cud: "delete",
+                    id: id,
+                }
+                $.ajax({
+                    type: "POST",
+                    url: '/in/api/tools/v1/toolsmanage',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    headers: that.headers,
+                    success: function (data) {
+                        that.$message.success(data.msg)
+                        that.getTools()
+                    },
+                    error: function (data) {
+                        that.$message.error(data.msg)
+                    }
+                })
+            },
+            openEditToolsDialog(row) {
+                this.toolsDialogVisible = true
+                this.tools = row
+                this.toolsDialogTitle = "更新工具"
+                this.tools["cud"] = "put"
+            },
+            openNewToolsDialog() {
+                this.tools = {
+                    name: "",
+                    bin: "",
+                    src: "",
+                    type: "",
+                    del_tag: 0,
+                    enabled: 0,
+                }
+                this.tools["cud"] = "post"
+                this.toolsDialogTitle = "新增工具"
+                this.toolsDialogVisible = true
+            },
+            toolsFOp() {
+                var that = this;
+                that.toolsDialogVisible = false
+                that.tools = {
+                    name: "",
+                    bin: "",
+                    src: "",
+                    type: "",
+                    del_tag: 0,
+                    enabled: 0,
+                }
+            },
+            toolsTOp() {
+                var that = this;
+                var data = this.tools;
+                $.ajax({
+                    type: "POST",
+                    url: '/in/api/tools/v1/toolsmanage',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    headers: that.headers,
+                    success: function (data) {
+                        that.$message.success(data.msg)
+                        that.toolsDialogVisible = false
+                        if (that.tools.cud == "post") {
+                            that.getTools()
+                        }
+                    },
+                    error: function (data) {
+                        that.$message.error(data.msg)
+                        that.toolsDialogVisible = false
+                    }
+                })
+            },
+            toolsRun() {
+                var tmp = this.activeIndex2.split("-")
+                var id = Number(tmp[tmp.length - 1])
+                var that = this;
+                $.ajax({
+                    type: "GET",
+                    url: '/in/api/tools/v1/toolsrun',
+                    contentType: 'application/json',
+                    data: { id: id },
+                    headers: that.headers,
+                    success: function (data) {
+                        that.$message.success(data.msg)
+                    },
+                    error: function (data) {
+                        that.$message.error(data.msg)
+                    }
+                })
+            },
 
         },
         mounted() {
-
+            this.toolsMenu()
         }
     });
 </script>

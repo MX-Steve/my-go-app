@@ -3,6 +3,7 @@ package model
 import (
 	"fmt"
 	"log"
+	"strings"
 	"time"
 )
 
@@ -14,7 +15,7 @@ type Audit struct {
 	Operator    string `json:"operator"`
 }
 
-func (a *Audit) GetAudits() ([]Audit, error) {
+func (a *Audit) GetAudits(sname, soperator string) ([]Audit, error) {
 	audits := []Audit{}
 	dbw := NewDb()
 	var id int
@@ -24,7 +25,22 @@ func (a *Audit) GetAudits() ([]Audit, error) {
 	var operator string
 
 	defer dbw.Db.Close()
-	sqlStr := "select id,name,description,update_time,operator from tools_audits order by id desc;"
+	sqlStr := "select id,name,description,update_time,operator from tools_audits where"
+	if sname != "" {
+		sqlStr = fmt.Sprintf("%s name='%s' and", sqlStr, sname)
+	}
+	if soperator != "" {
+		sqlStr = fmt.Sprintf("%s operator='%s'", sqlStr, soperator)
+	}
+	if strings.HasSuffix(sqlStr, "where") {
+		sqls := strings.Split(sqlStr, "where")
+		sqlStr = sqls[0]
+	}
+	if strings.HasSuffix(sqlStr, "and") {
+		sqls := strings.Split(sqlStr, "and")
+		sqlStr = sqls[0]
+	}
+	sqlStr = fmt.Sprintf("%s  order by id desc;", sqlStr)
 	log.Println(sqlStr)
 	rows, err := dbw.Db.Query(sqlStr)
 	if err != nil {
