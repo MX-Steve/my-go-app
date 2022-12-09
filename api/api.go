@@ -68,6 +68,24 @@ func LoginUser(c *gin.Context) {
 	})
 }
 
+func RegisterUser(c *gin.Context) {
+	u := UserModReq{}
+	c.BindJSON(&u)
+	user := &model.User{}
+	result := user.Register(u.Username, u.Password, u.Phone, u.Email)
+	if result {
+		c.JSON(http.StatusOK, gin.H{
+			"ok":  1,
+			"msg": "注册成功,请尝试登录",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"ok":  0,
+		"msg": "注册失败,请联系管理员",
+	})
+}
+
 func ModPhoto(c *gin.Context) {
 	c.Writer.Header().Add("Access-Control-Allow-Origin", "*")
 	c.Next()
@@ -90,6 +108,8 @@ func ModPhoto(c *gin.Context) {
 	val, ok := k.(uint64)
 	if !ok {
 		sid = uint64(val)
+	} else {
+		sid = val
 	}
 	users := &model.User{}
 	fileName := fmt.Sprintf("/public/images/self/%s", file.Filename)

@@ -34,6 +34,7 @@ func runRouterMain() {
 	noAuthGroup := router.Group("/out")
 	{
 		noAuthGroup.POST("/api/login", api.LoginUser)
+		noAuthGroup.POST("/api/register", api.RegisterUser)
 	}
 	authGroup := router.Group("/in")
 	authGroup.Use(middlerware.JWTAuth())

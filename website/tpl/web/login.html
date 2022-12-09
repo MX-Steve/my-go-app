@@ -15,9 +15,30 @@
                 </el-form-item>
                 <el-form-item style="text-align: center;">
                     <el-button type="success" @click="onSubmit">登录</el-button>
+                    <el-button type="default" @click="dialogVisible = true">注册</el-button>
                 </el-form-item>
             </el-form>
         </el-card>
+        <el-dialog title="注册账户" :visible.sync="dialogVisible" width="45%" :before-close="handleClose">
+            <el-form ref="user" :model="user" label-width="80px">
+                <el-form-item label="用户名称">
+                    <el-input v-model="user.username"></el-input>
+                </el-form-item>
+                <el-form-item label="用户密码">
+                    <el-input v-model="user.password"></el-input>
+                </el-form-item>
+                <el-form-item label="用户电话">
+                    <el-input v-model="user.phone"></el-input>
+                </el-form-item>
+                <el-form-item label="用户邮箱">
+                    <el-input v-model="user.email"></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="register">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
     <script>
         new Vue({
@@ -27,10 +48,41 @@
                     form: {
                         name: '',
                         password: ""
+                    },
+                    dialogVisible: false,
+                    user: {
+                        username: "",
+                        password: "",
+                        photo: "",
+                        phone: "",
+                        email: "",
                     }
                 }
             },
             methods: {
+                register() {
+                    if (this.user.username.trim() == "" ||
+                        this.user.password.trim() == "") {
+                        this.$message.error("用户名或密码不能为空")
+                    } else {
+                        var that = this;
+                        $.ajax({
+                            type: "POST",
+                            url: "/out/api/register",
+                            dataType: "json",
+                            data: JSON.stringify(that.user),
+                            contentType: "application/json;charset=utf-8",
+                            success: function (json) {
+                                if (json.ok == 1) {
+                                    that.$message.success(json.msg)
+                                    that.dialogVisible = false
+                                } else {
+                                    that.$message.error(json.msg)
+                                }
+                            }
+                        })
+                    }
+                },
                 onSubmit() {
                     var that = this
                     $.ajax({
@@ -49,7 +101,14 @@
                             }
                         }
                     })
-                }
+                },
+                handleClose(done) {
+                    this.$confirm('确认关闭？')
+                        .then(_ => {
+                            done();
+                        })
+                        .catch(_ => { });
+                },
             }
         });
     </script>

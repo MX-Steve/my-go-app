@@ -50,6 +50,19 @@ func (u *User) GetUser(uid uint64) (usr User, err error) {
 	return users, nil
 }
 
+func (u *User) Register(username, password, phone, email string) bool {
+	dbw := NewDb()
+	defer dbw.Db.Close()
+	sqlStr := fmt.Sprintf("INSERT INTO user(username, password, phone, email) values('%s', '%s','%s','%s')", username, password, phone, email)
+	log.Println(sqlStr)
+	_, err := dbw.Db.Exec(sqlStr)
+	if err != nil {
+		log.Println(err)
+		return false
+	}
+	return true
+}
+
 func (u *User) Login(username, password string) (int, bool) {
 	dbw := NewDb()
 	defer dbw.Db.Close()

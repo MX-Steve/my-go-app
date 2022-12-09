@@ -249,6 +249,7 @@ EMAIL: mx_steve@163.com`,
                 })
             },
             logout() {
+                $.cookie('Authorization', null)
                 location.href = "/login"
             },
             goToSettings() {

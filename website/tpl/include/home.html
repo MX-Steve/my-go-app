@@ -9,10 +9,10 @@
                         <el-col :offset="6" :span="10">
                             <el-row>
                                 <el-col :span="6">
-                                    <h3 style="line-height: 40px;">Name: </h3>
+                                    <h3 style="line-height: 40px;">姓名: </h3>
                                 </el-col>
                                 <el-col :span="18">
-                                    <el-input v-model="userInfo.username" placeholder="请输入用户名" disabled="disabled"></el-input>
+                                    <h3 style="line-height: 40px;" v-html="userInfo.username"></h3>
                                 </el-col>
                             </el-row>
                         </el-col>
@@ -21,10 +21,10 @@
                         <el-col :offset="6" :span="10">
                             <el-row>
                                 <el-col :span="6">
-                                    <h4 style="line-height: 40px;">Name: </h4>
+                                    <h4 style="line-height: 40px;">电话: </h4>
                                 </el-col>
                                 <el-col :span="18">
-                                    <el-input v-model="userInfo.phone" placeholder="请输入电话" disabled="disabled"></el-input>
+                                    <h4 style="line-height: 40px;" v-html="userInfo.phone"></h4>
                                 </el-col>
                             </el-row>
                         </el-col>
@@ -33,10 +33,10 @@
                         <el-col :offset="6" :span="10">
                             <el-row>
                                 <el-col :span="6">
-                                    <p style="line-height: 40px;">Email: </p>
+                                    <p style="line-height: 40px;">邮箱: </p>
                                 </el-col>
                                 <el-col :span="18">
-                                    <el-input v-model="userInfo.email" placeholder="请输入电话" disabled="disabled"></el-input>
+                                    <p style="line-height: 40px;" v-html="userInfo.email"></p>
                                 </el-col>
                             </el-row>
                         </el-col>
