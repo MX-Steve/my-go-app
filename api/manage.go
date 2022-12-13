@@ -63,10 +63,18 @@ func ToolsRun(c *gin.Context) {
 		cmd.Stderr = os.Stderr
 		log.Println(cmd.Run())
 	} else if strings.HasSuffix(data.Bin, ".exe") {
-		cmd := exec.Command("cmd.exe", "/C", "start "+data.Bin)
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		log.Println(cmd.Run())
+		n := strings.IndexAny(data.Bin, " ")
+		if n != -1 {
+			cmd := exec.Command("rundll32.exe", "url.dll,FileProtocolHandler", data.Bin)
+			cmd.Stdout = os.Stdout
+			cmd.Stderr = os.Stderr
+			log.Println(cmd.Run())
+		} else {
+			cmd := exec.Command("cmd.exe", "/C", "start "+data.Bin)
+			cmd.Stdout = os.Stdout
+			cmd.Stderr = os.Stderr
+			log.Println(cmd.Run())
+		}
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"msg": "程序调用",
