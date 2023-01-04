@@ -8,11 +8,13 @@ import (
 	"time"
 
 	"github.com/MX-Steve/my-go-app/tools"
+	"github.com/MX-Steve/my-go-app/vip"
 )
 
 func RunPy() {
+	py := vip.GetIniData("files.autoPath")
 	cmd := exec.Command("cmd.exe")
-	cmdExec := `start python D:\data\python_tools\auto_ssh.py`
+	cmdExec := fmt.Sprintf("start python %s", py)
 	//核心点,直接修改执行命令方式
 	cmd.SysProcAttr = &syscall.SysProcAttr{CmdLine: fmt.Sprintf(`/c %s`, cmdExec), HideWindow: true}
 	output, err := cmd.Output()
