@@ -102,7 +102,7 @@ func IndexHandler(c *gin.Context) {
 	data, c1, c2 := GetIndexs()
 	plans := GetPs()
 	c.HTML(http.StatusOK, "index.html", gin.H{
-		"Title":      "开拓者首页",
+		"Title":      "开拓者平台",
 		"Headers":    data,
 		"Carousel01": c1,
 		"Carousel02": c2,
