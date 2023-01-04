@@ -8,10 +8,10 @@ import (
 )
 
 func run() {
-	w := webview.New(800, 600, false, true)
+	w := webview.New(1000, 800, false, true)
 	defer w.Destroy()
 	w.SetTitle("KTZ Platform")
-	w.SetSize(800, 600, webview.HintNone)
+	w.SetSize(1000, 800, webview.HintNone)
 	port := vip.GetIniData("version.port")
 	w.Navigate(fmt.Sprintf("http://localhost:%s/login", port))
 	w.Run()
